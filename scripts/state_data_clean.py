@@ -140,11 +140,7 @@ main_df = main_df.drop(['State'], axis = 1)
 print(main_df.head())
 
 # write to a csv
-main_df.to_csv('processed_data/state_obs.csv', index=False)
+main_df.to_csv('processed_data/merged_state_obs.csv', index=False)
 
-
-print(len(tot_prison_pop_sub))
-print(len(corrections_sub_df))
-print(len(labor_df))
-print(len(state_corrections_expends))
-
+#
+tot_prison_pop.to_csv('processed_data/prison_pop_demographics_2022.csv', index=False)
