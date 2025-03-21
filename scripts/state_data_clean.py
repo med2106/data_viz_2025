@@ -79,6 +79,9 @@ corrections_sub_df['A_MEAN'] = pd.to_numeric(corrections_sub_df['A_MEAN'], error
 # rename the columns
 corrections_sub_df.columns = ['jurisdiction','total_co_employment','annual_mean_salary']
 
+# drop the Puerto Rico column
+corrections_sub_df = corrections_sub_df[corrections_sub_df['jurisdiction'] != "Puerto Rico"]
+
 # print(corrections_sub_df.head())
 
 ## Read in Captive Labor Data
@@ -95,16 +98,36 @@ labor_df.columns = new_l_col_names
 # create columns to fill in the data frame
 labor_df[['lower_bound_pay_non_industry', 'upper_bound_pay_non_industry',
           'lower_bound_pay_state_industry', 'upper_bound_pay_state_industry']] = np.nan
-# Regex pattern to extract the lower and upper values
-pattern = r'\$(\d+(\.\d+)?) to \$(\d+(\.\d+)?) per hour'
 
-# Extract lower and upper bounds
-extracted_values_1 = labor_df['pay_scale_non_industry'].str.extract(pattern)
-extracted_values_2 = labor_df['pay_scale_state_industry'].str.extract(pattern)
+# Regex patterns for the range format (e.g., "$10.00 to $20.00 per hour")
+pattern_range = r'\$(\d+(\.\d+)?) to \$(\d+(\.\d+)?) per hour'
+# Regex for the single value format (e.g., "$0.25 per hour")
+pattern_single_value = r'\$(\d+(\.\d+)?) per hour'
 
-# assign extracted values to the columns
-labor_df[['lower_bound_pay_non_industry', 'upper_bound_pay_non_industry']] = extracted_values_1.iloc[:,[0,2]]
-labor_df[['lower_bound_pay_state_industry', 'upper_bound_pay_state_industry']] = extracted_values_1.iloc[:,[0,2]]
+for index, row in labor_df.iterrows():
+    # Check if the string contains "to" (indicating a range format)
+    if isinstance(row['pay_scale_non_industry'], str) and 'to' in row['pay_scale_non_industry']:
+       # Apply range regex if the string contains "to"
+       extracted_values_range = pd.Series(row['pay_scale_non_industry']).str.extract(pattern_range)
+       labor_df.at[index, 'lower_bound_pay_non_industry'] = extracted_values_range.iloc[0, 0]
+       labor_df.at[index, 'upper_bound_pay_non_industry'] = extracted_values_range.iloc[0, 2]
+    elif isinstance(row['pay_scale_non_industry'], str):
+       # Apply single value regex if the string does not contain "to"
+       extracted_values_single = pd.Series(row['pay_scale_non_industry']).str.extract(pattern_single_value)
+       labor_df.at[index, 'lower_bound_pay_non_industry'] = extracted_values_single.iloc[0, 0]
+       labor_df.at[index, 'upper_bound_pay_non_industry'] = extracted_values_single.iloc[0, 0]
+    
+    # Same logic for the 'pay_scale_state_industry' column
+    if isinstance(row['pay_scale_state_industry'], str) and 'to' in row['pay_scale_state_industry']:
+       # Apply range regex if the string contains "to"
+       extracted_values_range = pd.Series(row['pay_scale_state_industry']).str.extract(pattern_range)
+       labor_df.at[index, 'lower_bound_pay_state_industry'] = extracted_values_range.iloc[0, 0]
+       labor_df.at[index, 'upper_bound_pay_state_industry'] = extracted_values_range.iloc[0, 2]
+    elif isinstance(row['pay_scale_state_industry'], str):
+       # Apply single value regex if the string does not contain "to"
+       extracted_values_single = pd.Series(row['pay_scale_state_industry']).str.extract(pattern_single_value)
+       labor_df.at[index, 'lower_bound_pay_state_industry'] = extracted_values_single.iloc[0, 0]
+       labor_df.at[index, 'upper_bound_pay_state_industry'] = extracted_values_single.iloc[0, 0]
 
 # Convert the extracted values to numeric
 labor_df['lower_bound_pay_non_industry'] = pd.to_numeric(labor_df['lower_bound_pay_non_industry'], errors='coerce')
@@ -112,9 +135,16 @@ labor_df['upper_bound_pay_non_industry'] = pd.to_numeric(labor_df['upper_bound_p
 labor_df['lower_bound_pay_state_industry'] = pd.to_numeric(labor_df['lower_bound_pay_state_industry'], errors='coerce')
 labor_df['upper_bound_pay_state_industry'] = pd.to_numeric(labor_df['upper_bound_pay_state_industry'], errors='coerce')
 
+# # any state that has zero needs to be made to be zero
+labor_df.loc[labor_df['pay_scale_non_industry'] == "$0", 'lower_bound_pay_non_industry'] = 0.00
+labor_df.loc[labor_df['pay_scale_non_industry'] == "$0", 'upper_bound_pay_non_industry'] = 0.00
+
+labor_df.loc[labor_df['pay_scale_state_industry'] == "$0", 'lower_bound_pay_state_industry'] = 0.00
+labor_df.loc[labor_df['pay_scale_state_industry'] == "$0", 'upper_bound_pay_state_industry'] = 0.00
+
 # Find the mean of the pay scales
-labor_df['mean_pay_non_industry'] = (labor_df['lower_bound_pay_non_industry']+labor_df['upper_bound_pay_non_industry'])/2
-labor_df['mean_pay_state_industry'] = (labor_df["lower_bound_pay_state_industry"] + labor_df['upper_bound_pay_state_industry'])/2
+labor_df['mean_pay_non_industry'] = round(((labor_df['lower_bound_pay_non_industry']+labor_df['upper_bound_pay_non_industry'])/2),2)
+labor_df['mean_pay_state_industry'] = round(((labor_df["lower_bound_pay_state_industry"] + labor_df['upper_bound_pay_state_industry'])/2),2)
 
 # change the number of prison works to numeric
 labor_df['num_prison_workers'] = labor_df['num_prison_workers'].replace(',',"",regex=True)
@@ -126,6 +156,10 @@ labor_df = labor_df.drop(['pay_scale_non_industry', 'pay_scale_state_industry'],
 # fix the strings of the state column
 labor_df['State'] = labor_df['State'].str.strip(' ') 
 # print(labor_df.head())
+
+# needed to manually update two rows because they were written very differently
+labor_df.loc[labor_df['State'] == "Washington", :] = ["Washington",8392.0,0.0,0.39,0.7,2.7,0.2,1.7]
+labor_df.loc[labor_df['State'] == "Wyoming", :] = ["Wyoming",None,0.35,1.00,0.50,1.20,0.68,0.85]
 
 ## All CSV files are in and cleaned, now we merge
 
@@ -142,5 +176,5 @@ print(main_df.head())
 # write to a csv
 main_df.to_csv('processed_data/merged_state_obs.csv', index=False)
 
-#
+# save the prison demographics for later use
 tot_prison_pop.to_csv('processed_data/prison_pop_demographics_2022.csv', index=False)
