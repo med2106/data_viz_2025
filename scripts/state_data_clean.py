@@ -161,10 +161,16 @@ labor_df['State'] = labor_df['State'].str.strip(' ')
 labor_df.loc[labor_df['State'] == "Washington", :] = ["Washington",8392.0,0.0,0.39,0.7,2.7,0.2,1.7]
 labor_df.loc[labor_df['State'] == "Wyoming", :] = ["Wyoming",None,0.35,1.00,0.50,1.20,0.68,0.85]
 
+
+## Read in Minimum Wage data
+min_wage_df = pd.read_csv("raw_data/minimum_wage_2022.csv")
+# nothing needs to be done with this data frame
+
 ## All CSV files are in and cleaned, now we merge
 
 # our different key fields are State and jurisdiction
 main_df = tot_prison_pop_sub.merge(labor_df, how = 'outer', left_on='jurisdiction', right_on='State')
+main_df = main_df.merge(min_wage_df, how = "outer", on = 'jurisdiction')
 main_df = main_df.merge(corrections_sub_df, how = 'outer', on='jurisdiction')
 main_df = main_df.merge(state_corrections_expends, how = 'outer', on='jurisdiction')
 

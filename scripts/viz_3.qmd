@@ -1,0 +1,30 @@
+---
+title: "Visualization 5"
+subtitle: "DSAN 5200 Final Project"
+author: "Morgan Dreiss"
+date: last-modified
+date-format: long
+format:
+    html: 
+        light: [cosmo, style/html-sta313.scss]
+        dark: [cosmo, style/html-sta313.scss, style/html-dark.scss]
+        toc: true
+        code-copy: true
+        code-overflow: wrap
+        mainfont: "Atkinson Hyperlegible"
+        code-annotations: hover
+        embed-resources: true
+        self-contained: true
+        code-fold: true
+        include-in-header:
+        - text: |
+            <script src="https://d3js.org/d3.v7.min.js"></script>
+
+execute:
+    echo: true
+    warning: false
+    message: false
+    freeze: auto
+---
+
+
