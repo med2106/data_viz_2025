@@ -16,10 +16,6 @@ format:
         embed-resources: true
         self-contained: true
         code-fold: true
-        include-in-header:
-        - text: |
-            <script src="https://d3js.org/d3.v7.min.js"></script>
-
 execute:
     echo: true
     warning: false
@@ -27,4 +23,30 @@ execute:
     freeze: auto
 ---
 
+```{r}
+#| label: load_libs
+library(tidyverse) |> suppressMessages()
+#remotes::install_github('vegawidget/vegabrite') |> suppressMessages()
+library(vegabrite) |> suppressMessages()
+library(jsonlite) |> suppressMessages()
+```
 
+```{r}
+#| label: load_data
+
+df <- read.csv('../processed_data/merged_state_obs.csv')
+print(summary(df))
+
+state_df <- df |> filter(jurisdiction != "Federal")
+```
+
+```{r}
+#| label: vb_scatter
+vl_chart(title = "Stuff", width = 550) |>
+   vl_add_data(values = state_df) |>
+   vl_mark_point() |>
+   vl_encode_x("mean_pay_non_industry", type = "quantitative", title = "Mean pay for prison workers") |>
+   vl_encode_y("correction_expends_abv", type = "quantitative", title = "Corrections Expenditures") |>
+   vl_encode_color(field = "total_prison_pop_22", type = "quantitative", bin= TRUE) |>
+   vl_encode_tooltip_array(c("jurisdiction","total_co_employment","annual_mean_salary"))
+```
