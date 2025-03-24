@@ -4362,12 +4362,12 @@ if (HTMLWidgets.shinyMode) {
                     Max.   :159309      Max.   :121247    
                                         NA&#39;s   :31        
  lower_bound_pay_non_industry upper_bound_pay_non_industry
- Min.   :0.0000               Min.   : 0.000              
- 1st Qu.:0.0500               1st Qu.: 0.150              
- Median :0.1200               Median : 0.390              
- Mean   :0.1232               Mean   : 1.268              
- 3rd Qu.:0.1950               3rd Qu.: 0.845              
- Max.   :0.3500               Max.   :38.000              
+ Min.   :0.0000               Min.   :0.0000              
+ 1st Qu.:0.0500               1st Qu.:0.1500              
+ Median :0.1200               Median :0.3800              
+ Mean   :0.1232               Mean   :0.4674              
+ 3rd Qu.:0.1950               3rd Qu.:0.7500              
+ Max.   :0.3500               Max.   :1.6100              
  NA&#39;s   :4                    NA&#39;s   :4                   
  lower_bound_pay_state_industry upper_bound_pay_state_industry
  Min.   :0.000                  Min.   :0.0000                
@@ -4378,12 +4378,12 @@ if (HTMLWidgets.shinyMode) {
  Max.   :0.970                  Max.   :4.5000                
  NA&#39;s   :5                      NA&#39;s   :5                     
  mean_pay_non_industry mean_pay_state_industry minimum_wage_2022
- Min.   : 0.0000       Min.   :0.0000          Min.   : 0.000   
- 1st Qu.: 0.1200       1st Qu.:0.4075          1st Qu.: 7.250   
- Median : 0.2500       Median :0.7300          Median : 9.500   
- Mean   : 0.6957       Mean   :0.7909          Mean   : 9.083   
- 3rd Qu.: 0.5050       3rd Qu.:0.9950          3rd Qu.:12.125   
- Max.   :19.0800       Max.   :2.4200          Max.   :14.490   
+ Min.   :0.0000        Min.   :0.0000          Min.   : 0.000   
+ 1st Qu.:0.1200        1st Qu.:0.4075          1st Qu.: 7.250   
+ Median :0.2500        Median :0.7300          Median : 9.500   
+ Mean   :0.2955        Mean   :0.7909          Mean   : 9.083   
+ 3rd Qu.:0.4900        3rd Qu.:0.9950          3rd Qu.:12.125   
+ Max.   :0.9700        Max.   :2.4200          Max.   :14.490   
  NA&#39;s   :4             NA&#39;s   :5                                
  total_co_employment annual_mean_salary correction_expends_abv
  Min.   :  420       Min.   :33500      Min.   :  127164      
@@ -4410,17 +4410,23 @@ if (HTMLWidgets.shinyMode) {
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vl_chart</span>(<span class="at">title =</span> <span class="st">&quot;Stuff&quot;</span>, <span class="at">width =</span> <span class="dv">550</span>) <span class="sc">|&gt;</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>   <span class="fu">vl_add_data</span>(<span class="at">values =</span> state_df) <span class="sc">|&gt;</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>   <span class="fu">vl_mark_point</span>() <span class="sc">|&gt;</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>   <span class="fu">vl_encode_x</span>(<span class="st">&quot;mean_pay_non_industry&quot;</span>, <span class="at">type =</span> <span class="st">&quot;quantitative&quot;</span>, <span class="at">title =</span> <span class="st">&quot;Mean pay for prison workers&quot;</span>) <span class="sc">|&gt;</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>   <span class="fu">vl_encode_y</span>(<span class="st">&quot;correction_expends_abv&quot;</span>, <span class="at">type =</span> <span class="st">&quot;quantitative&quot;</span>, <span class="at">title =</span> <span class="st">&quot;Corrections Expenditures&quot;</span>) <span class="sc">|&gt;</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>   <span class="fu">vl_encode_color</span>(<span class="at">field =</span> <span class="st">&quot;total_prison_pop_22&quot;</span>, <span class="at">type =</span> <span class="st">&quot;quantitative&quot;</span>, <span class="at">bin=</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>   <span class="fu">vl_encode_tooltip_array</span>(<span class="fu">c</span>(<span class="st">&quot;jurisdiction&quot;</span>,<span class="st">&quot;total_co_employment&quot;</span>,<span class="st">&quot;annual_mean_salary&quot;</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>state_df<span class="sc">$</span>expends_per_inmate <span class="ot">&lt;-</span> state_df<span class="sc">$</span>total_correction_expends<span class="sc">/</span>state_df<span class="sc">$</span>total_prison_pop_22</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vl_chart</span>(<span class="at">title =</span> <span class="st">&quot;Stuff&quot;</span>, <span class="at">width =</span> <span class="dv">550</span>) <span class="sc">|&gt;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>   <span class="fu">vl_add_data</span>(<span class="at">values =</span> state_df) <span class="sc">|&gt;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>   <span class="fu">vl_mark_point</span>() <span class="sc">|&gt;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>   <span class="fu">vl_encode_x</span>(<span class="st">&quot;mean_pay_non_industry&quot;</span>, <span class="at">type =</span> <span class="st">&quot;quantitative&quot;</span>, <span class="at">title =</span> <span class="st">&quot;Mean pay for prison workers&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>   <span class="fu">vl_encode_y</span>(<span class="st">&quot;expends_per_inmate&quot;</span>, <span class="at">type =</span> <span class="st">&quot;quantitative&quot;</span>, <span class="at">title =</span> <span class="st">&quot;Corrections Expenditures Per Inmate&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>   <span class="fu">vl_encode_color</span>(<span class="at">field =</span> <span class="st">&quot;total_prison_pop_22&quot;</span>, <span class="at">type =</span> <span class="st">&quot;quantitative&quot;</span>, <span class="at">bin=</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>   <span class="fu">vl_encode_tooltip_array</span>(<span class="fu">c</span>(<span class="st">&quot;jurisdiction&quot;</span>,<span class="st">&quot;total_co_employment&quot;</span>,<span class="st">&quot;annual_mean_salary&quot;</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="htmlwidget-9944207011ec2d2545ce" style="width:auto;height:auto;" class="vegawidget-vl5 html-widget"></div>
-<script type="application/json" data-for="htmlwidget-9944207011ec2d2545ce">{"x":{
+<div id="htmlwidget-0666a3c667fbc65d40bb" style="width:auto;height:auto;" class="vegawidget-vl5 html-widget"></div>
+<script type="application/json" data-for="htmlwidget-0666a3c667fbc65d40bb">{"x":{
   "chart_spec": {
     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "title": "Stuff",
@@ -4441,7 +4447,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 5310,
           "annual_mean_salary": 41240,
           "correction_expends_abv": 799779,
-          "total_correction_expends": 799779000
+          "total_correction_expends": 799779000,
+          "expends_per_inmate": 30270.5802202793
         },
         {
           "jurisdiction": "Alaska",
@@ -4457,7 +4464,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 1240,
           "annual_mean_salary": 67940,
           "correction_expends_abv": 441001,
-          "total_correction_expends": 441001000
+          "total_correction_expends": 441001000,
+          "expends_per_inmate": 92298.2419422352
         },
         {
           "jurisdiction": "Arizona",
@@ -4473,7 +4481,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 12790,
           "annual_mean_salary": 47270,
           "correction_expends_abv": 1410674,
-          "total_correction_expends": 1410674000
+          "total_correction_expends": 1410674000,
+          "expends_per_inmate": 41655.8098331611
         },
         {
           "jurisdiction": "Arkansas",
@@ -4489,7 +4498,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 4630,
           "annual_mean_salary": 39170,
           "correction_expends_abv": 359934,
-          "total_correction_expends": 359934000
+          "total_correction_expends": 359934000,
+          "expends_per_inmate": 20421.7872340426
         },
         {
           "jurisdiction": "California",
@@ -4505,7 +4515,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 35310,
           "annual_mean_salary": 84520,
           "correction_expends_abv": 11089374,
-          "total_correction_expends": 11089374000
+          "total_correction_expends": 11089374000,
+          "expends_per_inmate": 113611.32284239
         },
         {
           "jurisdiction": "Colorado",
@@ -4521,7 +4532,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 6520,
           "annual_mean_salary": 56810,
           "correction_expends_abv": 1193677,
-          "total_correction_expends": 1193677000
+          "total_correction_expends": 1193677000,
+          "expends_per_inmate": 69529.1821994408
         },
         {
           "jurisdiction": "Connecticut",
@@ -4537,7 +4549,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 3540,
           "annual_mean_salary": 56370,
           "correction_expends_abv": 702149,
-          "total_correction_expends": 702149000
+          "total_correction_expends": 702149000,
+          "expends_per_inmate": 66833.1429659242
         },
         {
           "jurisdiction": "Delaware",
@@ -4553,7 +4566,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 1680,
           "annual_mean_salary": 51070,
           "correction_expends_abv": 447049,
-          "total_correction_expends": 447049000
+          "total_correction_expends": 447049000,
+          "expends_per_inmate": 90240.0080742834
         },
         {
           "jurisdiction": "Florida",
@@ -4569,7 +4583,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 16870,
           "annual_mean_salary": 48720,
           "correction_expends_abv": 3028852,
-          "total_correction_expends": 3028852000
+          "total_correction_expends": 3028852000,
+          "expends_per_inmate": 35769.054536007
         },
         {
           "jurisdiction": "Georgia",
@@ -4585,7 +4600,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 9930,
           "annual_mean_salary": 38270,
           "correction_expends_abv": 1734037,
-          "total_correction_expends": 1734037000
+          "total_correction_expends": 1734037000,
+          "expends_per_inmate": 35798.3649538595
         },
         {
           "jurisdiction": "Hawaii",
@@ -4601,7 +4617,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 1290,
           "annual_mean_salary": 63120,
           "correction_expends_abv": 235403,
-          "total_correction_expends": 235403000
+          "total_correction_expends": 235403000,
+          "expends_per_inmate": 56737.2860930345
         },
         {
           "jurisdiction": "Idaho",
@@ -4617,7 +4634,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 1530,
           "annual_mean_salary": 47680,
           "correction_expends_abv": 369574,
-          "total_correction_expends": 369574000
+          "total_correction_expends": 369574000,
+          "expends_per_inmate": 40567.9473106476
         },
         {
           "jurisdiction": "Illinois",
@@ -4633,7 +4651,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 12900,
           "annual_mean_salary": 64840,
           "correction_expends_abv": 1735609,
-          "total_correction_expends": 1735609000
+          "total_correction_expends": 1735609000,
+          "expends_per_inmate": 58568.1649456705
         },
         {
           "jurisdiction": "Indiana",
@@ -4649,7 +4668,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 7240,
           "annual_mean_salary": 41330,
           "correction_expends_abv": 834267,
-          "total_correction_expends": 834267000
+          "total_correction_expends": 834267000,
+          "expends_per_inmate": 32993.2373645496
         },
         {
           "jurisdiction": "Iowa",
@@ -4665,7 +4685,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 3250,
           "annual_mean_salary": 50580,
           "correction_expends_abv": 340506,
-          "total_correction_expends": 340506000
+          "total_correction_expends": 340506000,
+          "expends_per_inmate": 40187.1828160038
         },
         {
           "jurisdiction": "Kansas",
@@ -4681,7 +4702,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 3100,
           "annual_mean_salary": 41110,
           "correction_expends_abv": 460871,
-          "total_correction_expends": 460871000
+          "total_correction_expends": 460871000,
+          "expends_per_inmate": 52918.9344356413
         },
         {
           "jurisdiction": "Kentucky",
@@ -4697,7 +4719,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 4840,
           "annual_mean_salary": 37870,
           "correction_expends_abv": 745033,
-          "total_correction_expends": 745033000
+          "total_correction_expends": 745033000,
+          "expends_per_inmate": 37734.6535656402
         },
         {
           "jurisdiction": "Louisiana",
@@ -4713,7 +4736,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 5620,
           "annual_mean_salary": 38400,
           "correction_expends_abv": 844573,
-          "total_correction_expends": 844573000
+          "total_correction_expends": 844573000,
+          "expends_per_inmate": 30941.2734466589
         },
         {
           "jurisdiction": "Maine",
@@ -4729,7 +4753,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 1150,
           "annual_mean_salary": 44360,
           "correction_expends_abv": 204923,
-          "total_correction_expends": 204923000
+          "total_correction_expends": 204923000,
+          "expends_per_inmate": 122342.089552239
         },
         {
           "jurisdiction": "Maryland",
@@ -4745,7 +4770,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 6260,
           "annual_mean_salary": 54450,
           "correction_expends_abv": 1694528,
-          "total_correction_expends": 1694528000
+          "total_correction_expends": 1694528000,
+          "expends_per_inmate": 108366.566476946
         },
         {
           "jurisdiction": "Massachusetts",
@@ -4761,23 +4787,25 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 5520,
           "annual_mean_salary": 69140,
           "correction_expends_abv": 1638342,
-          "total_correction_expends": 1638342000
+          "total_correction_expends": 1638342000,
+          "expends_per_inmate": 273011.498083653
         },
         {
           "jurisdiction": "Michigan",
           "total_prison_pop_22": 32374,
           "num_prison_workers": null,
           "lower_bound_pay_non_industry": 0.16,
-          "upper_bound_pay_non_industry": 38,
+          "upper_bound_pay_non_industry": 0.38,
           "lower_bound_pay_state_industry": null,
           "upper_bound_pay_state_industry": null,
-          "mean_pay_non_industry": 19.08,
+          "mean_pay_non_industry": 0.27,
           "mean_pay_state_industry": null,
           "minimum_wage_2022": 9.87,
           "total_co_employment": 7860,
           "annual_mean_salary": 55180,
           "correction_expends_abv": 1917553,
-          "total_correction_expends": 1917553000
+          "total_correction_expends": 1917553000,
+          "expends_per_inmate": 59231.2658306048
         },
         {
           "jurisdiction": "Minnesota",
@@ -4793,7 +4821,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 5050,
           "annual_mean_salary": 55650,
           "correction_expends_abv": 635176,
-          "total_correction_expends": 635176000
+          "total_correction_expends": 635176000,
+          "expends_per_inmate": 73549.7915701714
         },
         {
           "jurisdiction": "Mississippi",
@@ -4809,7 +4838,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 4150,
           "annual_mean_salary": 33500,
           "correction_expends_abv": 313852,
-          "total_correction_expends": 313852000
+          "total_correction_expends": 313852000,
+          "expends_per_inmate": 15849.5101504899
         },
         {
           "jurisdiction": "Missouri",
@@ -4825,7 +4855,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 5280,
           "annual_mean_salary": 38480,
           "correction_expends_abv": 782959,
-          "total_correction_expends": 782959000
+          "total_correction_expends": 782959000,
+          "expends_per_inmate": 32744.7200033457
         },
         {
           "jurisdiction": "Montana",
@@ -4841,7 +4872,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 1300,
           "annual_mean_salary": 43440,
           "correction_expends_abv": 224661,
-          "total_correction_expends": 224661000
+          "total_correction_expends": 224661000,
+          "expends_per_inmate": 47891.9206992113
         },
         {
           "jurisdiction": "Nebraska",
@@ -4857,7 +4889,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 2510,
           "annual_mean_salary": 47220,
           "correction_expends_abv": 485150,
-          "total_correction_expends": 485150000
+          "total_correction_expends": 485150000,
+          "expends_per_inmate": 85882.4570720482
         },
         {
           "jurisdiction": "Nevada",
@@ -4873,7 +4906,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 2950,
           "annual_mean_salary": 65190,
           "correction_expends_abv": 415344,
-          "total_correction_expends": 415344000
+          "total_correction_expends": 415344000,
+          "expends_per_inmate": 40309.0062111801
         },
         {
           "jurisdiction": "New Hampshire",
@@ -4889,7 +4923,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 750,
           "annual_mean_salary": 50920,
           "correction_expends_abv": 162647,
-          "total_correction_expends": 162647000
+          "total_correction_expends": 162647000,
+          "expends_per_inmate": 77970.757430489
         },
         {
           "jurisdiction": "New Jersey",
@@ -4905,7 +4940,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 8610,
           "annual_mean_salary": 76810,
           "correction_expends_abv": 1616262,
-          "total_correction_expends": 1616262000
+          "total_correction_expends": 1616262000,
+          "expends_per_inmate": 127697.084617208
         },
         {
           "jurisdiction": "New Mexico",
@@ -4921,7 +4957,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 3070,
           "annual_mean_salary": 39660,
           "correction_expends_abv": 520069,
-          "total_correction_expends": 520069000
+          "total_correction_expends": 520069000,
+          "expends_per_inmate": 104641.649899396
         },
         {
           "jurisdiction": "New York",
@@ -4937,7 +4974,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 31650,
           "annual_mean_salary": 70570,
           "correction_expends_abv": 3274868,
-          "total_correction_expends": 3274868000
+          "total_correction_expends": 3274868000,
+          "expends_per_inmate": 105138.94953127
         },
         {
           "jurisdiction": "North Carolina",
@@ -4953,7 +4991,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 13500,
           "annual_mean_salary": 40710,
           "correction_expends_abv": 1789274,
-          "total_correction_expends": 1789274000
+          "total_correction_expends": 1789274000,
+          "expends_per_inmate": 60393.3574104702
         },
         {
           "jurisdiction": "North Dakota",
@@ -4969,7 +5008,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 1070,
           "annual_mean_salary": 48320,
           "correction_expends_abv": 127164,
-          "total_correction_expends": 127164000
+          "total_correction_expends": 127164000,
+          "expends_per_inmate": 69985.6906989543
         },
         {
           "jurisdiction": "Ohio",
@@ -4985,7 +5025,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 12880,
           "annual_mean_salary": 50350,
           "correction_expends_abv": 2134924,
-          "total_correction_expends": 2134924000
+          "total_correction_expends": 2134924000,
+          "expends_per_inmate": 47115.0442477876
         },
         {
           "jurisdiction": "Oklahoma",
@@ -5001,7 +5042,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 4600,
           "annual_mean_salary": 35480,
           "correction_expends_abv": 619842,
-          "total_correction_expends": 619842000
+          "total_correction_expends": 619842000,
+          "expends_per_inmate": 27018.9616843206
         },
         {
           "jurisdiction": "Oregon",
@@ -5017,7 +5059,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 4480,
           "annual_mean_salary": 69950,
           "correction_expends_abv": 1195051,
-          "total_correction_expends": 1195051000
+          "total_correction_expends": 1195051000,
+          "expends_per_inmate": 95466.6080843585
         },
         {
           "jurisdiction": "Pennsylvania",
@@ -5033,7 +5076,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 15910,
           "annual_mean_salary": 58190,
           "correction_expends_abv": 2696941,
-          "total_correction_expends": 2696941000
+          "total_correction_expends": 2696941000,
+          "expends_per_inmate": 71140.6225270377
         },
         {
           "jurisdiction": "Rhode Island",
@@ -5049,7 +5093,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": null,
           "annual_mean_salary": null,
           "correction_expends_abv": 275113,
-          "total_correction_expends": 275113000
+          "total_correction_expends": 275113000,
+          "expends_per_inmate": 114965.733389051
         },
         {
           "jurisdiction": "South Carolina",
@@ -5065,7 +5110,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 4780,
           "annual_mean_salary": 42240,
           "correction_expends_abv": 647092,
-          "total_correction_expends": 647092000
+          "total_correction_expends": 647092000,
+          "expends_per_inmate": 39655.104792254
         },
         {
           "jurisdiction": "South Dakota",
@@ -5081,7 +5127,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 1300,
           "annual_mean_salary": 43110,
           "correction_expends_abv": 148717,
-          "total_correction_expends": 148717000
+          "total_correction_expends": 148717000,
+          "expends_per_inmate": 43181.475029036
         },
         {
           "jurisdiction": "Tennessee",
@@ -5097,7 +5144,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 7410,
           "annual_mean_salary": 40970,
           "correction_expends_abv": 1045095,
-          "total_correction_expends": 1045095000
+          "total_correction_expends": 1045095000,
+          "expends_per_inmate": 44031.8095639351
         },
         {
           "jurisdiction": "Texas",
@@ -5113,7 +5161,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 41840,
           "annual_mean_salary": 44550,
           "correction_expends_abv": 4229695,
-          "total_correction_expends": 4229695000
+          "total_correction_expends": 4229695000,
+          "expends_per_inmate": 30291.9480631092
         },
         {
           "jurisdiction": "Utah",
@@ -5129,7 +5178,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 1840,
           "annual_mean_salary": 49460,
           "correction_expends_abv": 465808,
-          "total_correction_expends": 465808000
+          "total_correction_expends": 465808000,
+          "expends_per_inmate": 77518.3890830421
         },
         {
           "jurisdiction": "Vermont",
@@ -5145,7 +5195,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 420,
           "annual_mean_salary": 50900,
           "correction_expends_abv": 169181,
-          "total_correction_expends": 169181000
+          "total_correction_expends": 169181000,
+          "expends_per_inmate": 124397.794117647
         },
         {
           "jurisdiction": "Virginia",
@@ -5161,7 +5212,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 11120,
           "annual_mean_salary": 45530,
           "correction_expends_abv": 2144489,
-          "total_correction_expends": 2144489000
+          "total_correction_expends": 2144489000,
+          "expends_per_inmate": 78951.8076724836
         },
         {
           "jurisdiction": "Washington",
@@ -5177,7 +5229,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 6020,
           "annual_mean_salary": 63580,
           "correction_expends_abv": 1313574,
-          "total_correction_expends": 1313574000
+          "total_correction_expends": 1313574000,
+          "expends_per_inmate": 95380.0464711008
         },
         {
           "jurisdiction": "West Virginia",
@@ -5193,7 +5246,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 2790,
           "annual_mean_salary": 44320,
           "correction_expends_abv": 339510,
-          "total_correction_expends": 339510000
+          "total_correction_expends": 339510000,
+          "expends_per_inmate": 57808.6156989614
         },
         {
           "jurisdiction": "Wisconsin",
@@ -5209,7 +5263,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 6720,
           "annual_mean_salary": 52120,
           "correction_expends_abv": 1259685,
-          "total_correction_expends": 1259685000
+          "total_correction_expends": 1259685000,
+          "expends_per_inmate": 60349.9736501701
         },
         {
           "jurisdiction": "Wyoming",
@@ -5225,7 +5280,8 @@ if (HTMLWidgets.shinyMode) {
           "total_co_employment": 910,
           "annual_mean_salary": 46690,
           "correction_expends_abv": 136302,
-          "total_correction_expends": 136302000
+          "total_correction_expends": 136302000,
+          "expends_per_inmate": 63278.5515320334
         }
       ]
     },
@@ -5239,14 +5295,923 @@ if (HTMLWidgets.shinyMode) {
         "title": "Mean pay for prison workers"
       },
       "y": {
-        "field": "correction_expends_abv",
+        "field": "expends_per_inmate",
         "type": "quantitative",
-        "title": "Corrections Expenditures"
+        "title": "Corrections Expenditures Per Inmate"
       },
       "color": {
         "field": "total_prison_pop_22",
         "type": "quantitative",
         "bin": true
+      },
+      "tooltip": [
+        {
+          "field": "jurisdiction",
+          "type": "nominal"
+        },
+        {
+          "field": "total_co_employment",
+          "type": "quantitative"
+        },
+        {
+          "field": "annual_mean_salary",
+          "type": "quantitative"
+        }
+      ]
+    }
+  },
+  "embed_options": {
+    "renderer": "canvas",
+    "defaultStyle": true
+  }
+},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vl_chart</span>(<span class="at">title =</span> <span class="st">&quot;Stuff&quot;</span>, <span class="at">width =</span> <span class="dv">550</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>   <span class="fu">vl_add_data</span>(<span class="at">values =</span> state_df) <span class="sc">|&gt;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>   <span class="fu">vl_mark_bar</span>() <span class="sc">|&gt;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>   <span class="fu">vl_encode_x</span>(<span class="st">&quot;mean_pay_non_industry&quot;</span>, <span class="at">type =</span> <span class="st">&quot;quantitative&quot;</span>, <span class="at">title =</span> <span class="st">&quot;Mean pay for prison workers&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>   <span class="fu">vl_encode_y</span>(<span class="st">&quot;annual_mean_salary&quot;</span>, <span class="at">type =</span> <span class="st">&quot;quantitative&quot;</span>, <span class="at">title =</span> <span class="st">&quot;Corrections Expenditures Per Inmate&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>   <span class="co">#vl_encode_color(field = &quot;total_prison_pop_22&quot;, type = &quot;quantitative&quot;, bin= TRUE) |&gt;</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>   <span class="fu">vl_encode_tooltip_array</span>(<span class="fu">c</span>(<span class="st">&quot;jurisdiction&quot;</span>,<span class="st">&quot;total_co_employment&quot;</span>,<span class="st">&quot;annual_mean_salary&quot;</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="htmlwidget-1d6448c50ecd75e9d688" style="width:auto;height:auto;" class="vegawidget-vl5 html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1d6448c50ecd75e9d688">{"x":{
+  "chart_spec": {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "title": "Stuff",
+    "width": 550,
+    "data": {
+      "values": [
+        {
+          "jurisdiction": "Alabama",
+          "total_prison_pop_22": 26421,
+          "num_prison_workers": null,
+          "lower_bound_pay_non_industry": 0,
+          "upper_bound_pay_non_industry": 0,
+          "lower_bound_pay_state_industry": 0.25,
+          "upper_bound_pay_state_industry": 0.75,
+          "mean_pay_non_industry": 0,
+          "mean_pay_state_industry": 0.5,
+          "minimum_wage_2022": 0,
+          "total_co_employment": 5310,
+          "annual_mean_salary": 41240,
+          "correction_expends_abv": 799779,
+          "total_correction_expends": 799779000,
+          "expends_per_inmate": 30270.5802202793
+        },
+        {
+          "jurisdiction": "Alaska",
+          "total_prison_pop_22": 4778,
+          "num_prison_workers": null,
+          "lower_bound_pay_non_industry": 0.3,
+          "upper_bound_pay_non_industry": 0.9,
+          "lower_bound_pay_state_industry": null,
+          "upper_bound_pay_state_industry": null,
+          "mean_pay_non_industry": 0.6,
+          "mean_pay_state_industry": null,
+          "minimum_wage_2022": 10.34,
+          "total_co_employment": 1240,
+          "annual_mean_salary": 67940,
+          "correction_expends_abv": 441001,
+          "total_correction_expends": 441001000,
+          "expends_per_inmate": 92298.2419422352
+        },
+        {
+          "jurisdiction": "Arizona",
+          "total_prison_pop_22": 33865,
+          "num_prison_workers": 18097,
+          "lower_bound_pay_non_industry": 0.15,
+          "upper_bound_pay_non_industry": 0.45,
+          "lower_bound_pay_state_industry": 0.23,
+          "upper_bound_pay_state_industry": 1,
+          "mean_pay_non_industry": 0.3,
+          "mean_pay_state_industry": 0.62,
+          "minimum_wage_2022": 12.8,
+          "total_co_employment": 12790,
+          "annual_mean_salary": 47270,
+          "correction_expends_abv": 1410674,
+          "total_correction_expends": 1410674000,
+          "expends_per_inmate": 41655.8098331611
+        },
+        {
+          "jurisdiction": "Arkansas",
+          "total_prison_pop_22": 17625,
+          "num_prison_workers": 7837,
+          "lower_bound_pay_non_industry": 0,
+          "upper_bound_pay_non_industry": 0,
+          "lower_bound_pay_state_industry": 0,
+          "upper_bound_pay_state_industry": 0,
+          "mean_pay_non_industry": 0,
+          "mean_pay_state_industry": 0,
+          "minimum_wage_2022": 11,
+          "total_co_employment": 4630,
+          "annual_mean_salary": 39170,
+          "correction_expends_abv": 359934,
+          "total_correction_expends": 359934000,
+          "expends_per_inmate": 20421.7872340426
+        },
+        {
+          "jurisdiction": "California",
+          "total_prison_pop_22": 97608,
+          "num_prison_workers": 64788,
+          "lower_bound_pay_non_industry": 0.08,
+          "upper_bound_pay_non_industry": 0.37,
+          "lower_bound_pay_state_industry": 0.35,
+          "upper_bound_pay_state_industry": 1,
+          "mean_pay_non_industry": 0.22,
+          "mean_pay_state_industry": 0.68,
+          "minimum_wage_2022": 14,
+          "total_co_employment": 35310,
+          "annual_mean_salary": 84520,
+          "correction_expends_abv": 11089374,
+          "total_correction_expends": 11089374000,
+          "expends_per_inmate": 113611.32284239
+        },
+        {
+          "jurisdiction": "Colorado",
+          "total_prison_pop_22": 17168,
+          "num_prison_workers": 10392,
+          "lower_bound_pay_non_industry": 0.33,
+          "upper_bound_pay_non_industry": 1.61,
+          "lower_bound_pay_state_industry": 0.86,
+          "upper_bound_pay_state_industry": 2.49,
+          "mean_pay_non_industry": 0.97,
+          "mean_pay_state_industry": 1.68,
+          "minimum_wage_2022": 12.56,
+          "total_co_employment": 6520,
+          "annual_mean_salary": 56810,
+          "correction_expends_abv": 1193677,
+          "total_correction_expends": 1193677000,
+          "expends_per_inmate": 69529.1821994408
+        },
+        {
+          "jurisdiction": "Connecticut",
+          "total_prison_pop_22": 10506,
+          "num_prison_workers": null,
+          "lower_bound_pay_non_industry": 0.12,
+          "upper_bound_pay_non_industry": 0.9,
+          "lower_bound_pay_state_industry": 0.3,
+          "upper_bound_pay_state_industry": 1.5,
+          "mean_pay_non_industry": 0.51,
+          "mean_pay_state_industry": 0.9,
+          "minimum_wage_2022": 14,
+          "total_co_employment": 3540,
+          "annual_mean_salary": 56370,
+          "correction_expends_abv": 702149,
+          "total_correction_expends": 702149000,
+          "expends_per_inmate": 66833.1429659242
+        },
+        {
+          "jurisdiction": "Delaware",
+          "total_prison_pop_22": 4954,
+          "num_prison_workers": null,
+          "lower_bound_pay_non_industry": null,
+          "upper_bound_pay_non_industry": null,
+          "lower_bound_pay_state_industry": 0.25,
+          "upper_bound_pay_state_industry": 2,
+          "mean_pay_non_industry": null,
+          "mean_pay_state_industry": 1.12,
+          "minimum_wage_2022": 10.5,
+          "total_co_employment": 1680,
+          "annual_mean_salary": 51070,
+          "correction_expends_abv": 447049,
+          "total_correction_expends": 447049000,
+          "expends_per_inmate": 90240.0080742834
+        },
+        {
+          "jurisdiction": "Florida",
+          "total_prison_pop_22": 84678,
+          "num_prison_workers": null,
+          "lower_bound_pay_non_industry": 0,
+          "upper_bound_pay_non_industry": 0.32,
+          "lower_bound_pay_state_industry": 0.2,
+          "upper_bound_pay_state_industry": 0.95,
+          "mean_pay_non_industry": 0.16,
+          "mean_pay_state_industry": 0.57,
+          "minimum_wage_2022": 10,
+          "total_co_employment": 16870,
+          "annual_mean_salary": 48720,
+          "correction_expends_abv": 3028852,
+          "total_correction_expends": 3028852000,
+          "expends_per_inmate": 35769.054536007
+        },
+        {
+          "jurisdiction": "Georgia",
+          "total_prison_pop_22": 48439,
+          "num_prison_workers": null,
+          "lower_bound_pay_non_industry": 0,
+          "upper_bound_pay_non_industry": 0,
+          "lower_bound_pay_state_industry": 0,
+          "upper_bound_pay_state_industry": 0,
+          "mean_pay_non_industry": 0,
+          "mean_pay_state_industry": 0,
+          "minimum_wage_2022": 7.25,
+          "total_co_employment": 9930,
+          "annual_mean_salary": 38270,
+          "correction_expends_abv": 1734037,
+          "total_correction_expends": 1734037000,
+          "expends_per_inmate": 35798.3649538595
+        },
+        {
+          "jurisdiction": "Hawaii",
+          "total_prison_pop_22": 4149,
+          "num_prison_workers": null,
+          "lower_bound_pay_non_industry": 0.25,
+          "upper_bound_pay_non_industry": 1,
+          "lower_bound_pay_state_industry": 0.5,
+          "upper_bound_pay_state_industry": 2.5,
+          "mean_pay_non_industry": 0.62,
+          "mean_pay_state_industry": 1.5,
+          "minimum_wage_2022": 12,
+          "total_co_employment": 1290,
+          "annual_mean_salary": 63120,
+          "correction_expends_abv": 235403,
+          "total_correction_expends": 235403000,
+          "expends_per_inmate": 56737.2860930345
+        },
+        {
+          "jurisdiction": "Idaho",
+          "total_prison_pop_22": 9110,
+          "num_prison_workers": null,
+          "lower_bound_pay_non_industry": 0.2,
+          "upper_bound_pay_non_industry": 0.9,
+          "lower_bound_pay_state_industry": null,
+          "upper_bound_pay_state_industry": null,
+          "mean_pay_non_industry": 0.55,
+          "mean_pay_state_industry": null,
+          "minimum_wage_2022": 7.25,
+          "total_co_employment": 1530,
+          "annual_mean_salary": 47680,
+          "correction_expends_abv": 369574,
+          "total_correction_expends": 369574000,
+          "expends_per_inmate": 40567.9473106476
+        },
+        {
+          "jurisdiction": "Illinois",
+          "total_prison_pop_22": 29634,
+          "num_prison_workers": null,
+          "lower_bound_pay_non_industry": 0.13,
+          "upper_bound_pay_non_industry": 0.39,
+          "lower_bound_pay_state_industry": 0.3,
+          "upper_bound_pay_state_industry": 2.4,
+          "mean_pay_non_industry": 0.26,
+          "mean_pay_state_industry": 1.35,
+          "minimum_wage_2022": 12,
+          "total_co_employment": 12900,
+          "annual_mean_salary": 64840,
+          "correction_expends_abv": 1735609,
+          "total_correction_expends": 1735609000,
+          "expends_per_inmate": 58568.1649456705
+        },
+        {
+          "jurisdiction": "Indiana",
+          "total_prison_pop_22": 25286,
+          "num_prison_workers": null,
+          "lower_bound_pay_non_industry": 0.12,
+          "upper_bound_pay_non_industry": 0.25,
+          "lower_bound_pay_state_industry": 0.3,
+          "upper_bound_pay_state_industry": 0.55,
+          "mean_pay_non_industry": 0.18,
+          "mean_pay_state_industry": 0.43,
+          "minimum_wage_2022": 7.25,
+          "total_co_employment": 7240,
+          "annual_mean_salary": 41330,
+          "correction_expends_abv": 834267,
+          "total_correction_expends": 834267000,
+          "expends_per_inmate": 32993.2373645496
+        },
+        {
+          "jurisdiction": "Iowa",
+          "total_prison_pop_22": 8473,
+          "num_prison_workers": null,
+          "lower_bound_pay_non_industry": 0.28,
+          "upper_bound_pay_non_industry": 0.71,
+          "lower_bound_pay_state_industry": 0.7,
+          "upper_bound_pay_state_industry": 0.95,
+          "mean_pay_non_industry": 0.5,
+          "mean_pay_state_industry": 0.82,
+          "minimum_wage_2022": 7.25,
+          "total_co_employment": 3250,
+          "annual_mean_salary": 50580,
+          "correction_expends_abv": 340506,
+          "total_correction_expends": 340506000,
+          "expends_per_inmate": 40187.1828160038
+        },
+        {
+          "jurisdiction": "Kansas",
+          "total_prison_pop_22": 8709,
+          "num_prison_workers": null,
+          "lower_bound_pay_non_industry": 0.06,
+          "upper_bound_pay_non_industry": 0.13,
+          "lower_bound_pay_state_industry": 0.25,
+          "upper_bound_pay_state_industry": 3,
+          "mean_pay_non_industry": 0.1,
+          "mean_pay_state_industry": 1.62,
+          "minimum_wage_2022": 7.25,
+          "total_co_employment": 3100,
+          "annual_mean_salary": 41110,
+          "correction_expends_abv": 460871,
+          "total_correction_expends": 460871000,
+          "expends_per_inmate": 52918.9344356413
+        },
+        {
+          "jurisdiction": "Kentucky",
+          "total_prison_pop_22": 19744,
+          "num_prison_workers": null,
+          "lower_bound_pay_non_industry": 0.1,
+          "upper_bound_pay_non_industry": 0.3,
+          "lower_bound_pay_state_industry": null,
+          "upper_bound_pay_state_industry": null,
+          "mean_pay_non_industry": 0.2,
+          "mean_pay_state_industry": null,
+          "minimum_wage_2022": 7.25,
+          "total_co_employment": 4840,
+          "annual_mean_salary": 37870,
+          "correction_expends_abv": 745033,
+          "total_correction_expends": 745033000,
+          "expends_per_inmate": 37734.6535656402
+        },
+        {
+          "jurisdiction": "Louisiana",
+          "total_prison_pop_22": 27296,
+          "num_prison_workers": null,
+          "lower_bound_pay_non_industry": 0.02,
+          "upper_bound_pay_non_industry": 0.04,
+          "lower_bound_pay_state_industry": 0.02,
+          "upper_bound_pay_state_industry": 0.4,
+          "mean_pay_non_industry": 0.03,
+          "mean_pay_state_industry": 0.21,
+          "minimum_wage_2022": 0,
+          "total_co_employment": 5620,
+          "annual_mean_salary": 38400,
+          "correction_expends_abv": 844573,
+          "total_correction_expends": 844573000,
+          "expends_per_inmate": 30941.2734466589
+        },
+        {
+          "jurisdiction": "Maine",
+          "total_prison_pop_22": 1675,
+          "num_prison_workers": null,
+          "lower_bound_pay_non_industry": 0,
+          "upper_bound_pay_non_industry": 1.57,
+          "lower_bound_pay_state_industry": 0.5,
+          "upper_bound_pay_state_industry": 2.8,
+          "mean_pay_non_industry": 0.78,
+          "mean_pay_state_industry": 1.65,
+          "minimum_wage_2022": 12.75,
+          "total_co_employment": 1150,
+          "annual_mean_salary": 44360,
+          "correction_expends_abv": 204923,
+          "total_correction_expends": 204923000,
+          "expends_per_inmate": 122342.089552239
+        },
+        {
+          "jurisdiction": "Maryland",
+          "total_prison_pop_22": 15637,
+          "num_prison_workers": 13242,
+          "lower_bound_pay_non_industry": 0.14,
+          "upper_bound_pay_non_industry": 0.43,
+          "lower_bound_pay_state_industry": 0.17,
+          "upper_bound_pay_state_industry": 1.16,
+          "mean_pay_non_industry": 0.29,
+          "mean_pay_state_industry": 0.66,
+          "minimum_wage_2022": 12.5,
+          "total_co_employment": 6260,
+          "annual_mean_salary": 54450,
+          "correction_expends_abv": 1694528,
+          "total_correction_expends": 1694528000,
+          "expends_per_inmate": 108366.566476946
+        },
+        {
+          "jurisdiction": "Massachusetts",
+          "total_prison_pop_22": 6001,
+          "num_prison_workers": null,
+          "lower_bound_pay_non_industry": 0.16,
+          "upper_bound_pay_non_industry": 0.79,
+          "lower_bound_pay_state_industry": 0.4,
+          "upper_bound_pay_state_industry": 1.55,
+          "mean_pay_non_industry": 0.48,
+          "mean_pay_state_industry": 0.98,
+          "minimum_wage_2022": 14.25,
+          "total_co_employment": 5520,
+          "annual_mean_salary": 69140,
+          "correction_expends_abv": 1638342,
+          "total_correction_expends": 1638342000,
+          "expends_per_inmate": 273011.498083653
+        },
+        {
+          "jurisdiction": "Michigan",
+          "total_prison_pop_22": 32374,
+          "num_prison_workers": null,
+          "lower_bound_pay_non_industry": 0.16,
+          "upper_bound_pay_non_industry": 0.38,
+          "lower_bound_pay_state_industry": null,
+          "upper_bound_pay_state_industry": null,
+          "mean_pay_non_industry": 0.27,
+          "mean_pay_state_industry": null,
+          "minimum_wage_2022": 9.87,
+          "total_co_employment": 7860,
+          "annual_mean_salary": 55180,
+          "correction_expends_abv": 1917553,
+          "total_correction_expends": 1917553000,
+          "expends_per_inmate": 59231.2658306048
+        },
+        {
+          "jurisdiction": "Minnesota",
+          "total_prison_pop_22": 8636,
+          "num_prison_workers": null,
+          "lower_bound_pay_non_industry": 0.25,
+          "upper_bound_pay_non_industry": 1,
+          "lower_bound_pay_state_industry": 0.5,
+          "upper_bound_pay_state_industry": 2,
+          "mean_pay_non_industry": 0.62,
+          "mean_pay_state_industry": 1.25,
+          "minimum_wage_2022": 10.33,
+          "total_co_employment": 5050,
+          "annual_mean_salary": 55650,
+          "correction_expends_abv": 635176,
+          "total_correction_expends": 635176000,
+          "expends_per_inmate": 73549.7915701714
+        },
+        {
+          "jurisdiction": "Mississippi",
+          "total_prison_pop_22": 19802,
+          "num_prison_workers": null,
+          "lower_bound_pay_non_industry": 0,
+          "upper_bound_pay_non_industry": 0,
+          "lower_bound_pay_state_industry": 0.2,
+          "upper_bound_pay_state_industry": 1.3,
+          "mean_pay_non_industry": 0,
+          "mean_pay_state_industry": 0.75,
+          "minimum_wage_2022": 0,
+          "total_co_employment": 4150,
+          "annual_mean_salary": 33500,
+          "correction_expends_abv": 313852,
+          "total_correction_expends": 313852000,
+          "expends_per_inmate": 15849.5101504899
+        },
+        {
+          "jurisdiction": "Missouri",
+          "total_prison_pop_22": 23911,
+          "num_prison_workers": null,
+          "lower_bound_pay_non_industry": 0.05,
+          "upper_bound_pay_non_industry": 0.06,
+          "lower_bound_pay_state_industry": 0.3,
+          "upper_bound_pay_state_industry": 0.71,
+          "mean_pay_non_industry": 0.06,
+          "mean_pay_state_industry": 0.5,
+          "minimum_wage_2022": 11.15,
+          "total_co_employment": 5280,
+          "annual_mean_salary": 38480,
+          "correction_expends_abv": 782959,
+          "total_correction_expends": 782959000,
+          "expends_per_inmate": 32744.7200033457
+        },
+        {
+          "jurisdiction": "Montana",
+          "total_prison_pop_22": 4691,
+          "num_prison_workers": 16430,
+          "lower_bound_pay_non_industry": 0.16,
+          "upper_bound_pay_non_industry": 1.12,
+          "lower_bound_pay_state_industry": 0.21,
+          "upper_bound_pay_state_industry": 1.25,
+          "mean_pay_non_industry": 0.64,
+          "mean_pay_state_industry": 0.73,
+          "minimum_wage_2022": 9.2,
+          "total_co_employment": 1300,
+          "annual_mean_salary": 43440,
+          "correction_expends_abv": 224661,
+          "total_correction_expends": 224661000,
+          "expends_per_inmate": 47891.9206992113
+        },
+        {
+          "jurisdiction": "Nebraska",
+          "total_prison_pop_22": 5649,
+          "num_prison_workers": 3092,
+          "lower_bound_pay_non_industry": null,
+          "upper_bound_pay_non_industry": null,
+          "lower_bound_pay_state_industry": 0.38,
+          "upper_bound_pay_state_industry": 1.08,
+          "mean_pay_non_industry": null,
+          "mean_pay_state_industry": 0.73,
+          "minimum_wage_2022": 9,
+          "total_co_employment": 2510,
+          "annual_mean_salary": 47220,
+          "correction_expends_abv": 485150,
+          "total_correction_expends": 485150000,
+          "expends_per_inmate": 85882.4570720482
+        },
+        {
+          "jurisdiction": "Nevada",
+          "total_prison_pop_22": 10304,
+          "num_prison_workers": null,
+          "lower_bound_pay_non_industry": 0,
+          "upper_bound_pay_non_industry": 0,
+          "lower_bound_pay_state_industry": 0.35,
+          "upper_bound_pay_state_industry": 4.5,
+          "mean_pay_non_industry": 0,
+          "mean_pay_state_industry": 2.42,
+          "minimum_wage_2022": 9.5,
+          "total_co_employment": 2950,
+          "annual_mean_salary": 65190,
+          "correction_expends_abv": 415344,
+          "total_correction_expends": 415344000,
+          "expends_per_inmate": 40309.0062111801
+        },
+        {
+          "jurisdiction": "New Hampshire",
+          "total_prison_pop_22": 2086,
+          "num_prison_workers": 1244,
+          "lower_bound_pay_non_industry": 0.21,
+          "upper_bound_pay_non_industry": 1,
+          "lower_bound_pay_state_industry": 0.25,
+          "upper_bound_pay_state_industry": 1.6,
+          "mean_pay_non_industry": 0.6,
+          "mean_pay_state_industry": 0.92,
+          "minimum_wage_2022": 7.25,
+          "total_co_employment": 750,
+          "annual_mean_salary": 50920,
+          "correction_expends_abv": 162647,
+          "total_correction_expends": 162647000,
+          "expends_per_inmate": 77970.757430489
+        },
+        {
+          "jurisdiction": "New Jersey",
+          "total_prison_pop_22": 12657,
+          "num_prison_workers": null,
+          "lower_bound_pay_non_industry": 0.2,
+          "upper_bound_pay_non_industry": 0.25,
+          "lower_bound_pay_state_industry": 0.2,
+          "upper_bound_pay_state_industry": 0.25,
+          "mean_pay_non_industry": 0.22,
+          "mean_pay_state_industry": 0.22,
+          "minimum_wage_2022": 13,
+          "total_co_employment": 8610,
+          "annual_mean_salary": 76810,
+          "correction_expends_abv": 1616262,
+          "total_correction_expends": 1616262000,
+          "expends_per_inmate": 127697.084617208
+        },
+        {
+          "jurisdiction": "New Mexico",
+          "total_prison_pop_22": 4970,
+          "num_prison_workers": null,
+          "lower_bound_pay_non_industry": 0.1,
+          "upper_bound_pay_non_industry": 1,
+          "lower_bound_pay_state_industry": 0.3,
+          "upper_bound_pay_state_industry": 1.1,
+          "mean_pay_non_industry": 0.55,
+          "mean_pay_state_industry": 0.7,
+          "minimum_wage_2022": 11.5,
+          "total_co_employment": 3070,
+          "annual_mean_salary": 39660,
+          "correction_expends_abv": 520069,
+          "total_correction_expends": 520069000,
+          "expends_per_inmate": 104641.649899396
+        },
+        {
+          "jurisdiction": "New York",
+          "total_prison_pop_22": 31148,
+          "num_prison_workers": 31000,
+          "lower_bound_pay_non_industry": 0.1,
+          "upper_bound_pay_non_industry": 0.33,
+          "lower_bound_pay_state_industry": 0.16,
+          "upper_bound_pay_state_industry": 0.65,
+          "mean_pay_non_industry": 0.22,
+          "mean_pay_state_industry": 0.4,
+          "minimum_wage_2022": 13.2,
+          "total_co_employment": 31650,
+          "annual_mean_salary": 70570,
+          "correction_expends_abv": 3274868,
+          "total_correction_expends": 3274868000,
+          "expends_per_inmate": 105138.94953127
+        },
+        {
+          "jurisdiction": "North Carolina",
+          "total_prison_pop_22": 29627,
+          "num_prison_workers": 13142,
+          "lower_bound_pay_non_industry": 0.05,
+          "upper_bound_pay_non_industry": 0.33,
+          "lower_bound_pay_state_industry": 0.05,
+          "upper_bound_pay_state_industry": 0.38,
+          "mean_pay_non_industry": 0.19,
+          "mean_pay_state_industry": 0.22,
+          "minimum_wage_2022": 7.25,
+          "total_co_employment": 13500,
+          "annual_mean_salary": 40710,
+          "correction_expends_abv": 1789274,
+          "total_correction_expends": 1789274000,
+          "expends_per_inmate": 60393.3574104702
+        },
+        {
+          "jurisdiction": "North Dakota",
+          "total_prison_pop_22": 1817,
+          "num_prison_workers": 1505,
+          "lower_bound_pay_non_industry": 0.05,
+          "upper_bound_pay_non_industry": 0.13,
+          "lower_bound_pay_state_industry": 0.45,
+          "upper_bound_pay_state_industry": 1.79,
+          "mean_pay_non_industry": 0.09,
+          "mean_pay_state_industry": 1.12,
+          "minimum_wage_2022": 7.25,
+          "total_co_employment": 1070,
+          "annual_mean_salary": 48320,
+          "correction_expends_abv": 127164,
+          "total_correction_expends": 127164000,
+          "expends_per_inmate": 69985.6906989543
+        },
+        {
+          "jurisdiction": "Ohio",
+          "total_prison_pop_22": 45313,
+          "num_prison_workers": null,
+          "lower_bound_pay_non_industry": 0.1,
+          "upper_bound_pay_non_industry": 0.17,
+          "lower_bound_pay_state_industry": 0.23,
+          "upper_bound_pay_state_industry": 1.35,
+          "mean_pay_non_industry": 0.14,
+          "mean_pay_state_industry": 0.79,
+          "minimum_wage_2022": 9.3,
+          "total_co_employment": 12880,
+          "annual_mean_salary": 50350,
+          "correction_expends_abv": 2134924,
+          "total_correction_expends": 2134924000,
+          "expends_per_inmate": 47115.0442477876
+        },
+        {
+          "jurisdiction": "Oklahoma",
+          "total_prison_pop_22": 22941,
+          "num_prison_workers": null,
+          "lower_bound_pay_non_industry": 0.05,
+          "upper_bound_pay_non_industry": 0.1,
+          "lower_bound_pay_state_industry": 0.2,
+          "upper_bound_pay_state_industry": 0.6,
+          "mean_pay_non_industry": 0.08,
+          "mean_pay_state_industry": 0.4,
+          "minimum_wage_2022": 7.25,
+          "total_co_employment": 4600,
+          "annual_mean_salary": 35480,
+          "correction_expends_abv": 619842,
+          "total_correction_expends": 619842000,
+          "expends_per_inmate": 27018.9616843206
+        },
+        {
+          "jurisdiction": "Oregon",
+          "total_prison_pop_22": 12518,
+          "num_prison_workers": null,
+          "lower_bound_pay_non_industry": null,
+          "upper_bound_pay_non_industry": null,
+          "lower_bound_pay_state_industry": 0.05,
+          "upper_bound_pay_state_industry": 0.47,
+          "mean_pay_non_industry": null,
+          "mean_pay_state_industry": 0.26,
+          "minimum_wage_2022": 13.5,
+          "total_co_employment": 4480,
+          "annual_mean_salary": 69950,
+          "correction_expends_abv": 1195051,
+          "total_correction_expends": 1195051000,
+          "expends_per_inmate": 95466.6080843585
+        },
+        {
+          "jurisdiction": "Pennsylvania",
+          "total_prison_pop_22": 37910,
+          "num_prison_workers": 30491,
+          "lower_bound_pay_non_industry": 0.19,
+          "upper_bound_pay_non_industry": 0.51,
+          "lower_bound_pay_state_industry": 0.19,
+          "upper_bound_pay_state_industry": 0.51,
+          "mean_pay_non_industry": 0.35,
+          "mean_pay_state_industry": 0.35,
+          "minimum_wage_2022": 7.25,
+          "total_co_employment": 15910,
+          "annual_mean_salary": 58190,
+          "correction_expends_abv": 2696941,
+          "total_correction_expends": 2696941000,
+          "expends_per_inmate": 71140.6225270377
+        },
+        {
+          "jurisdiction": "Rhode Island",
+          "total_prison_pop_22": 2393,
+          "num_prison_workers": 2163,
+          "lower_bound_pay_non_industry": 0.08,
+          "upper_bound_pay_non_industry": 0.47,
+          "lower_bound_pay_state_industry": 0.22,
+          "upper_bound_pay_state_industry": 0.44,
+          "mean_pay_non_industry": 0.27,
+          "mean_pay_state_industry": 0.33,
+          "minimum_wage_2022": 12.25,
+          "total_co_employment": null,
+          "annual_mean_salary": null,
+          "correction_expends_abv": 275113,
+          "total_correction_expends": 275113000,
+          "expends_per_inmate": 114965.733389051
+        },
+        {
+          "jurisdiction": "South Carolina",
+          "total_prison_pop_22": 16318,
+          "num_prison_workers": 14786,
+          "lower_bound_pay_non_industry": 0,
+          "upper_bound_pay_non_industry": 0,
+          "lower_bound_pay_state_industry": 0,
+          "upper_bound_pay_state_industry": 2,
+          "mean_pay_non_industry": 0,
+          "mean_pay_state_industry": 1,
+          "minimum_wage_2022": 0,
+          "total_co_employment": 4780,
+          "annual_mean_salary": 42240,
+          "correction_expends_abv": 647092,
+          "total_correction_expends": 647092000,
+          "expends_per_inmate": 39655.104792254
+        },
+        {
+          "jurisdiction": "South Dakota",
+          "total_prison_pop_22": 3444,
+          "num_prison_workers": null,
+          "lower_bound_pay_non_industry": 0.25,
+          "upper_bound_pay_non_industry": 0.25,
+          "lower_bound_pay_state_industry": 0.25,
+          "upper_bound_pay_state_industry": 0.5,
+          "mean_pay_non_industry": 0.25,
+          "mean_pay_state_industry": 0.38,
+          "minimum_wage_2022": 9.95,
+          "total_co_employment": 1300,
+          "annual_mean_salary": 43110,
+          "correction_expends_abv": 148717,
+          "total_correction_expends": 148717000,
+          "expends_per_inmate": 43181.475029036
+        },
+        {
+          "jurisdiction": "Tennessee",
+          "total_prison_pop_22": 23735,
+          "num_prison_workers": 7724,
+          "lower_bound_pay_non_industry": 0.17,
+          "upper_bound_pay_non_industry": 0.59,
+          "lower_bound_pay_state_industry": null,
+          "upper_bound_pay_state_industry": null,
+          "mean_pay_non_industry": 0.38,
+          "mean_pay_state_industry": null,
+          "minimum_wage_2022": 0,
+          "total_co_employment": 7410,
+          "annual_mean_salary": 40970,
+          "correction_expends_abv": 1045095,
+          "total_correction_expends": 1045095000,
+          "expends_per_inmate": 44031.8095639351
+        },
+        {
+          "jurisdiction": "Texas",
+          "total_prison_pop_22": 139631,
+          "num_prison_workers": 121247,
+          "lower_bound_pay_non_industry": 0,
+          "upper_bound_pay_non_industry": 0,
+          "lower_bound_pay_state_industry": 0,
+          "upper_bound_pay_state_industry": 0,
+          "mean_pay_non_industry": 0,
+          "mean_pay_state_industry": 0,
+          "minimum_wage_2022": 7.25,
+          "total_co_employment": 41840,
+          "annual_mean_salary": 44550,
+          "correction_expends_abv": 4229695,
+          "total_correction_expends": 4229695000,
+          "expends_per_inmate": 30291.9480631092
+        },
+        {
+          "jurisdiction": "Utah",
+          "total_prison_pop_22": 6009,
+          "num_prison_workers": null,
+          "lower_bound_pay_non_industry": null,
+          "upper_bound_pay_non_industry": null,
+          "lower_bound_pay_state_industry": 0.6,
+          "upper_bound_pay_state_industry": 1.75,
+          "mean_pay_non_industry": null,
+          "mean_pay_state_industry": 1.18,
+          "minimum_wage_2022": 7.25,
+          "total_co_employment": 1840,
+          "annual_mean_salary": 49460,
+          "correction_expends_abv": 465808,
+          "total_correction_expends": 465808000,
+          "expends_per_inmate": 77518.3890830421
+        },
+        {
+          "jurisdiction": "Vermont",
+          "total_prison_pop_22": 1360,
+          "num_prison_workers": null,
+          "lower_bound_pay_non_industry": 0.25,
+          "upper_bound_pay_non_industry": 0.25,
+          "lower_bound_pay_state_industry": 0.25,
+          "upper_bound_pay_state_industry": 1.35,
+          "mean_pay_non_industry": 0.25,
+          "mean_pay_state_industry": 0.8,
+          "minimum_wage_2022": 12.55,
+          "total_co_employment": 420,
+          "annual_mean_salary": 50900,
+          "correction_expends_abv": 169181,
+          "total_correction_expends": 169181000,
+          "expends_per_inmate": 124397.794117647
+        },
+        {
+          "jurisdiction": "Virginia",
+          "total_prison_pop_22": 27162,
+          "num_prison_workers": 16000,
+          "lower_bound_pay_non_industry": 0.25,
+          "upper_bound_pay_non_industry": 0.25,
+          "lower_bound_pay_state_industry": 0.55,
+          "upper_bound_pay_state_industry": 0.8,
+          "mean_pay_non_industry": 0.25,
+          "mean_pay_state_industry": 0.68,
+          "minimum_wage_2022": 11,
+          "total_co_employment": 11120,
+          "annual_mean_salary": 45530,
+          "correction_expends_abv": 2144489,
+          "total_correction_expends": 2144489000,
+          "expends_per_inmate": 78951.8076724836
+        },
+        {
+          "jurisdiction": "Washington",
+          "total_prison_pop_22": 13772,
+          "num_prison_workers": 8392,
+          "lower_bound_pay_non_industry": 0,
+          "upper_bound_pay_non_industry": 0.39,
+          "lower_bound_pay_state_industry": 0.7,
+          "upper_bound_pay_state_industry": 2.7,
+          "mean_pay_non_industry": 0.2,
+          "mean_pay_state_industry": 1.7,
+          "minimum_wage_2022": 14.49,
+          "total_co_employment": 6020,
+          "annual_mean_salary": 63580,
+          "correction_expends_abv": 1313574,
+          "total_correction_expends": 1313574000,
+          "expends_per_inmate": 95380.0464711008
+        },
+        {
+          "jurisdiction": "West Virginia",
+          "total_prison_pop_22": 5873,
+          "num_prison_workers": 1010,
+          "lower_bound_pay_non_industry": 0.09,
+          "upper_bound_pay_non_industry": 0.51,
+          "lower_bound_pay_state_industry": 0.25,
+          "upper_bound_pay_state_industry": 1.25,
+          "mean_pay_non_industry": 0.3,
+          "mean_pay_state_industry": 0.75,
+          "minimum_wage_2022": 8.75,
+          "total_co_employment": 2790,
+          "annual_mean_salary": 44320,
+          "correction_expends_abv": 339510,
+          "total_correction_expends": 339510000,
+          "expends_per_inmate": 57808.6156989614
+        },
+        {
+          "jurisdiction": "Wisconsin",
+          "total_prison_pop_22": 20873,
+          "num_prison_workers": 15724,
+          "lower_bound_pay_non_industry": 0.12,
+          "upper_bound_pay_non_industry": 0.42,
+          "lower_bound_pay_state_industry": 0.97,
+          "upper_bound_pay_state_industry": 0.97,
+          "mean_pay_non_industry": 0.27,
+          "mean_pay_state_industry": 0.97,
+          "minimum_wage_2022": 7.25,
+          "total_co_employment": 6720,
+          "annual_mean_salary": 52120,
+          "correction_expends_abv": 1259685,
+          "total_correction_expends": 1259685000,
+          "expends_per_inmate": 60349.9736501701
+        },
+        {
+          "jurisdiction": "Wyoming",
+          "total_prison_pop_22": 2154,
+          "num_prison_workers": null,
+          "lower_bound_pay_non_industry": 0.35,
+          "upper_bound_pay_non_industry": 1,
+          "lower_bound_pay_state_industry": 0.5,
+          "upper_bound_pay_state_industry": 1.2,
+          "mean_pay_non_industry": 0.68,
+          "mean_pay_state_industry": 0.85,
+          "minimum_wage_2022": 7.25,
+          "total_co_employment": 910,
+          "annual_mean_salary": 46690,
+          "correction_expends_abv": 136302,
+          "total_correction_expends": 136302000,
+          "expends_per_inmate": 63278.5515320334
+        }
+      ]
+    },
+    "mark": {
+      "type": "bar"
+    },
+    "encoding": {
+      "x": {
+        "field": "mean_pay_non_industry",
+        "type": "quantitative",
+        "title": "Mean pay for prison workers"
+      },
+      "y": {
+        "field": "annual_mean_salary",
+        "type": "quantitative",
+        "title": "Corrections Expenditures Per Inmate"
       },
       "tooltip": [
         {

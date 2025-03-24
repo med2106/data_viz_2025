@@ -39,6 +39,12 @@ print(summary(df))
 
 state_df <- df |> filter(jurisdiction != "Federal")
 ```
+```{r}
+state_df$expends_per_inmate <- state_df$total_correction_expends/state_df$total_prison_pop_22
+
+```
+
+
 
 ```{r}
 #| label: vb_scatter
@@ -46,7 +52,19 @@ vl_chart(title = "Stuff", width = 550) |>
    vl_add_data(values = state_df) |>
    vl_mark_point() |>
    vl_encode_x("mean_pay_non_industry", type = "quantitative", title = "Mean pay for prison workers") |>
-   vl_encode_y("correction_expends_abv", type = "quantitative", title = "Corrections Expenditures") |>
+   vl_encode_y("expends_per_inmate", type = "quantitative", title = "Corrections Expenditures Per Inmate") |>
    vl_encode_color(field = "total_prison_pop_22", type = "quantitative", bin= TRUE) |>
+   vl_encode_tooltip_array(c("jurisdiction","total_co_employment","annual_mean_salary"))
+```
+
+
+```{r}
+#| label: vb_bar
+vl_chart(title = "Stuff", width = 550) |>
+   vl_add_data(values = state_df) |>
+   vl_mark_bar() |>
+   vl_encode_x("mean_pay_non_industry", type = "quantitative", title = "Mean pay for prison workers") |>
+   vl_encode_y("annual_mean_salary", type = "quantitative", title = "Corrections Expenditures Per Inmate") |>
+   #vl_encode_color(field = "total_prison_pop_22", type = "quantitative", bin= TRUE) |>
    vl_encode_tooltip_array(c("jurisdiction","total_co_employment","annual_mean_salary"))
 ```
