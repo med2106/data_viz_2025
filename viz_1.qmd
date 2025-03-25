@@ -1,0 +1,48 @@
+---
+title: "Visualization 1"
+subtitle: "DSAN 5200 Final Project"
+author: "Sarah Chambers"
+date: last-modified
+date-format: long
+format: html
+execute:
+  echo: true
+---
+
+
+```{r}
+library(readr)
+library(tidyverse)
+library(vegabrite)
+
+df <- read_csv("processed_data/merged_state_obs.csv")
+```
+
+# Viz 1
+```{r}
+vl_chart() %>%
+  vl_add_data_frame(name = "prison_data", values = df) %>%
+  vl_add_data_url(
+    name = "geo",
+    url = "https://raw.githubusercontent.com/vega/vega-datasets/main/data/us-10m.json",
+    format = list(type = "topojson", feature = "states")
+  ) %>%
+  vl_lookup(
+    lookup = "jurisdiction",
+    from = list(
+      data = list(name = "geo"),
+      key = "properties.name",
+      fields = list("geometry")
+    )
+  ) %>%
+  vl_mark_geoshape() %>%
+  vl_add_properties(
+    projection = list(type = "albersUsa")
+  ) %>%
+  vl_encode_color("total_prison_pop_22", type = "quantitative", title = "Prison Population (2022)") %>%
+  vl_encode_tooltip(field = "jurisdiction", type = "nominal", title = "State") %>%
+  vl_encode_tooltip(field = "total_prison_pop_22", type = "quantitative", title = "Prison Pop")
+
+```
+
+# Viz 1.1
