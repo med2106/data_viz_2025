@@ -25,7 +25,6 @@ head(df)
 ```
 
 ```{r}
-
 library(vegabrite)
 
 # Small bar chart test
@@ -38,6 +37,8 @@ data.frame(x = 1:3, y = c(10, 20, 30)) %>%
   )
 
 ```
+
+
 ```{r}
 spec_test <- list(
   `$schema` = "https://vega.github.io/schema/vega-lite/v5.json",
