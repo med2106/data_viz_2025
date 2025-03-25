@@ -29,6 +29,20 @@ tot_prison_pop[numeric_cols] = tot_prison_pop[numeric_cols].apply(pd.to_numeric)
 tot_prison_pop_sub = tot_prison_pop.iloc[:,0:2]
 # print(tot_prison_pop_sub.head())
 
+## Read in Prison population per 100,000 people
+prison_rate = pd.read_csv("raw_data/p22stt07.csv")
+
+# keep just the total column for 2022
+prison_rate_df = prison_rate[['Jurisdiction','Total_2022']]
+
+# convert total column to numeric
+prison_rate_df['Total_2022'] = pd.to_numeric(prison_rate_df['Total_2022'])
+
+# rename columns
+prison_rate_df.columns = ['jurisdiction','total_inmates_per_100000']
+
+# print(prison_rate_df.head())
+
 ## Read in State Expenditure Data
 state_expends = pd.read_csv("raw_data/StateExpenditures2022.csv")
 
@@ -169,7 +183,8 @@ min_wage_df = pd.read_csv("raw_data/minimum_wage_2022.csv")
 ## All CSV files are in and cleaned, now we merge
 
 # our different key fields are State and jurisdiction
-main_df = tot_prison_pop_sub.merge(labor_df, how = 'outer', left_on='jurisdiction', right_on='State')
+main_df = tot_prison_pop_sub.merge(prison_rate_df, how = 'outer', on='jurisdiction')
+main_df = main_df.merge(labor_df, how = 'outer', left_on='jurisdiction', right_on='State')
 main_df = main_df.merge(min_wage_df, how = "outer", on = 'jurisdiction')
 main_df = main_df.merge(corrections_sub_df, how = 'outer', on='jurisdiction')
 main_df = main_df.merge(state_corrections_expends, how = 'outer', on='jurisdiction')
