@@ -35,12 +35,49 @@ library(jsonlite) |> suppressMessages()
 #| label: load_data
 
 df <- read.csv('../processed_data/merged_state_obs.csv')
-print(summary(df))
-
-state_df <- df |> filter(jurisdiction != "Federal")
+df$expends_per_inmate <- df$total_correction_expends/df$total_prison_pop_22
 ```
+
 ```{r}
-state_df$expends_per_inmate <- state_df$total_correction_expends/state_df$total_prison_pop_22
+# Regions according to the US Census
+Northeast <- c("Connecticut", "Maine", "Massachusetts", "New Hampshire", "Rhode Island", "Vermont",
+               "New Jersey", "New York", "Pennsylvania")
+
+Midwest <- c("Illinois", "Indiana", "Michigan", "Ohio", "Wisconsin", "Iowa", "Kansas", "Minnesota",
+             "Missouri", "Nebraska", "North Dakota", "South Dakota")
+
+South <- c("Delaware", "District of Columbia", "Florida", "Georgia", "Maryland", "North Carolina", 
+           "South Carolina", "Virginia", "West Virginia", "Alabama", "Kentucky", "Mississippi", 
+           "Tennessee", "Arkansas", "Louisiana", "Oklahoma", "Texas")
+
+West <- c("Arizona", "Colorado", "Idaho", "Montana", "Nevada", "New Mexico", "Utah", "Wyoming", 
+          "Alaska", "California", "Hawaii", "Oregon", "Washington")
+
+# create new region column for dataframe
+df$region <- NA  
+
+# Loop to assign region based on the state
+for(i in 1:nrow(df)) {
+  if(df$jurisdiction[i] %in% Northeast) {
+    df$region[i] <- "Northeast"
+  } else if(df$jurisdiction[i] %in% Midwest) {
+    df$region[i] <- "Midwest"
+  } else if(df$jurisdiction[i] %in% South) {
+    df$region[i] <- "South"
+  } else if(df$jurisdiction[i] %in% West) {
+    df$region[i] <- "West"
+  }
+}
+
+```
+
+```{r}
+# remove federal for now
+state_df <- df |> filter(jurisdiction != "Federal")
+
+# create color palette
+c_palette <- c("#fdaa48", "#FF8D1E", "#ee671d", "#b84818", "#6f300d", "#131110","#999999", "#cccccc")
+c_palette_sub <- c("#fdaa48", "#ee671d", "#b84818", "#6f300d", "#131110")
 
 ```
 
@@ -48,23 +85,40 @@ state_df$expends_per_inmate <- state_df$total_correction_expends/state_df$total_
 
 ```{r}
 #| label: vb_scatter
-vl_chart(title = "Stuff", width = 550) |>
+overview <- vl_chart(title = "Mean Hourly Wage for Inmates Compared to State Prison Expenses", 
+                     width = 550) |>
    vl_add_data(values = state_df) |>
    vl_mark_point() |>
-   vl_encode_x("mean_pay_non_industry", type = "quantitative", title = "Mean pay for prison workers") |>
+   vl_encode_x("mean_pay_non_industry", type = "quantitative", title = "Inmates' Mean Hourly Wage for Work within the Prison") |>
    vl_encode_y("expends_per_inmate", type = "quantitative", title = "Corrections Expenditures Per Inmate") |>
-   vl_encode_color(field = "total_prison_pop_22", type = "quantitative", bin= TRUE) |>
-   vl_encode_tooltip_array(c("jurisdiction","total_co_employment","annual_mean_salary"))
+   vl_add_interval_selection(name = 'brush',resolve = "global") |>
+   vl_encode_shape(field = "region", title = "Region of US") |>
+   vl_encode_color(value = "grey") |>
+   vl_condition_color(param = 'brush',
+                  field = "total_prison_pop_22", 
+                  type = "quantitative", 
+                  #bin = list(binned = TRUE, step = 5), 
+                  scale = list(range = c_palette_sub),
+                  title = "Total Prison Population 2022") |>
+   vl_encode_tooltip_array(c("jurisdiction","total_prison_pop_22","total_correction_expends"))
+
+detail <- vl_chart(title = "Stuff", width = 550) |>
+   vl_add_data(values = state_df) |>
+   vl_filter(.object = list(filter = list(selection = "brush"))) |>
+   vl_mark_bar() |>
+   vl_encode_x("jurisdiction", type = "nominal", 
+               title = "State") |>
+   vl_encode_y("correction_expends_abv", type = "quantitative", 
+               title = "Total Annual Correction Department Expenditures") |>
+   vl_encode_color(field = "total_prison_pop_22", type = "quantitative",
+                   scale = list(range = c_palette_sub)) |>
+   vl_encode_tooltip_array(list("jurisdiction","total_prison_pop_22", 
+                             "mean_pay_non_industry","mean_pay_state_industry"))
+
+vl_vconcat(overview, detail)
 ```
 
-
 ```{r}
-#| label: vb_bar
-vl_chart(title = "Stuff", width = 550) |>
-   vl_add_data(values = state_df) |>
-   vl_mark_bar() |>
-   vl_encode_x("mean_pay_non_industry", type = "quantitative", title = "Mean pay for prison workers") |>
-   vl_encode_y("annual_mean_salary", type = "quantitative", title = "Corrections Expenditures Per Inmate") |>
-   #vl_encode_color(field = "total_prison_pop_22", type = "quantitative", bin= TRUE) |>
-   vl_encode_tooltip_array(c("jurisdiction","total_co_employment","annual_mean_salary"))
+colnames(df) <- c("Jurisdiction", "Total Prison Population 2022", "num_prison_workers", "lower_bound_pay_non_industry" , "upper_bound_pay_non_industry", "lower_bound_pay_state_industry", "upper_bound_pay_state_industry", "Mean Hourly Wage (Non-industry)", "Mean Hourly Wage (Industry)", "minimum_wage_2022","total_co_employment", "annual_mean_salary",
+"Annual Correction Dept. Expenditures (1000s)", "Annual Correction Dept. Expenditures", "expends_per_inmate")
 ```
