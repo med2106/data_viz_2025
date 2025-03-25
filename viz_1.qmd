@@ -1,48 +1,55 @@
 ---
-title: "Visualization 1"
-subtitle: "DSAN 5200 Final Project"
-author: "Sarah Chambers"
-date: last-modified
-date-format: long
-format: html
-execute:
-  echo: true
+title: "Prison Population Viz"
+format:
+    html: 
+        light: [cosmo, style/html-sta313.scss]
+        dark: [cosmo, style/html-sta313.scss, style/html-dark.scss]
+        toc: true
+        code-copy: true
+        code-overflow: wrap
+        mainfont: "Atkinson Hyperlegible"
+        code-annotations: hover
+        embed-resources: true
+        self-contained: true
+        code-fold: true
+editor: visual
 ---
 
-
 ```{r}
-library(readr)
+install.packages("usmap")
+library(usmap)
 library(tidyverse)
-library(vegabrite)
+```
+
+```{r, fig.width=10, fig.height=6, message=FALSE, warning=FALSE}
+library(usmap)
+library(tidyverse)
 
 df <- read_csv("processed_data/merged_state_obs.csv")
+
+map_data <- df %>%
+  filter(jurisdiction != "Federal") %>%
+  select(state = jurisdiction, total_prison_pop_22) %>%
+  mutate(state = state.name[match(state, state.name)]) %>%
+  drop_na()
+
+# Plot the choropleth map
+plot_usmap(data = map_data, values = "total_prison_pop_22", color = "white") +
+  scale_fill_continuous(
+    low = "#CCE5FF", 
+    high = "#003366", 
+    name = "Total Prisoners (2022)", 
+    label = scales::comma
+  ) +
+  labs(
+    title = "Total Prison Population by State (2022)", 
+    caption = "Data source: merged_state_obs.csv"
+  ) +
+  theme_minimal(base_family = "sans") +   # safest font
+  theme(
+    legend.position = "right",
+    plot.title = element_text(size = 16, face = "bold"),
+    plot.caption = element_text(size = 10, color = "gray40")
+  )
+
 ```
-
-# Viz 1
-```{r}
-vl_chart() %>%
-  vl_add_data_frame(name = "prison_data", values = df) %>%
-  vl_add_data_url(
-    name = "geo",
-    url = "https://raw.githubusercontent.com/vega/vega-datasets/main/data/us-10m.json",
-    format = list(type = "topojson", feature = "states")
-  ) %>%
-  vl_lookup(
-    lookup = "jurisdiction",
-    from = list(
-      data = list(name = "geo"),
-      key = "properties.name",
-      fields = list("geometry")
-    )
-  ) %>%
-  vl_mark_geoshape() %>%
-  vl_add_properties(
-    projection = list(type = "albersUsa")
-  ) %>%
-  vl_encode_color("total_prison_pop_22", type = "quantitative", title = "Prison Population (2022)") %>%
-  vl_encode_tooltip(field = "jurisdiction", type = "nominal", title = "State") %>%
-  vl_encode_tooltip(field = "total_prison_pop_22", type = "quantitative", title = "Prison Pop")
-
-```
-
-# Viz 1.1
