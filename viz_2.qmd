@@ -1,0 +1,55 @@
+---
+author: "Sarah Chambers"
+title: "Prison Wages v Min Wage"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(plotly)
+
+df <- read_csv("processed_data/merged_state_obs.csv")
+
+# States to exclude- no prision labor was reported...
+states_to_drop <- c("Alabama", "Mississippi", "South Carolina", "Louisiana", "Tennessee", "Georgia", "Texas", "Arkansas", "Nevada")
+
+wage_data <- df %>%
+  filter(jurisdiction != "Federal") %>%
+  select(state = jurisdiction, 
+         prison_wage = mean_pay_non_industry,
+         minimum_wage = minimum_wage_2022) %>%
+  filter(!is.na(prison_wage)) %>%
+  filter(!state %in% states_to_drop)
+
+long_data <- wage_data %>%
+  pivot_longer(cols = c(prison_wage, minimum_wage), 
+               names_to = "wage_type", 
+               values_to = "wage") %>%
+  mutate(wage_type = recode(wage_type,
+                            prison_wage = "Prison Wage",
+                            minimum_wage = "Minimum Wage"))
+
+# Legend labels and colors
+wage_labels <- c("prison_wage" = "Prison Wage", "minimum_wage" = "Minimum Wage")
+wage_colors <- c("Minimum Wage" = "#FF8D1E", "Prison Wage" = "#b84818")
+
+# Plot
+plot <- ggplot(long_data, aes(x = reorder(state, wage), y = wage, fill = wage_type,
+                              text = paste("State:", state, "<br>Wage:", wage))) +
+  geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_manual(values = wage_colors, labels = wage_labels, name = "Wage Type") +
+  labs(
+    title = "Prison Wages vs Minimum Wages by State (2022)",
+    x = " ", y = "Hourly Wage (USD)"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 60, hjust = 1, size = 7),
+    axis.title.x = element_text(margin = margin(t = 12)),
+    legend.title = element_text(size = 10, face = "bold"),
+    legend.text = element_text(size = 9),
+    legend.position = "bottom"
+  )
+
+ggplotly(plot, tooltip = "text")
+```

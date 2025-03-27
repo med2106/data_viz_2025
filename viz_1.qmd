@@ -1,11 +1,12 @@
 ---
 author: "Sarah Chambers"
-title: "Prison Population Viz"
+title: "Prison Population Viz Choropleths"
 output: html_document
 ---
 
-Viz #1
+Viz #1: Total Prision Population by State
 ```{r, fig.width=10, fig.height=6, message=FALSE, warning=FALSE}
+
 library(usmap)
 library(tidyverse)
 
@@ -17,33 +18,81 @@ map_data <- df %>%
   mutate(state = state.name[match(state, state.name)]) %>%
   drop_na()
 
-# Plot the choropleth map
+# Custom orange color palette
+c_palette <- c("#fdaa48", "#FF8D1E", "#ee671d", "#b84818", "#6f300d", "#131110")
+
 plot_usmap(data = map_data, values = "total_prison_pop_22", color = "white") +
-  scale_fill_continuous(
-    low = "#CCE5FF", 
-    high = "#003366", 
-    name = "Total Prisoners (2022)", 
-    label = scales::comma
+  scale_fill_gradientn(
+    colors = c_palette,
+    name = "Total Prisoners (2022)",
+    labels = scales::comma,
+    na.value = "gray90"
   ) +
   labs(
     title = "Total Prison Population by State (2022)", 
     caption = "Data source: merged_state_obs.csv"
   ) +
-  theme_minimal(base_family = "sans") +   # safest font
+  theme_minimal(base_family = "sans") +
   theme(
     legend.position = "right",
     plot.title = element_text(size = 16, face = "bold"),
     plot.caption = element_text(size = 10, color = "gray40")
   )
+
 ```
 
 
-Viz #1.1
+Viz #1.1: Percentage of People in Prision
 ```{r, fig.width=10, fig.height=6, message=FALSE, warning=FALSE}
 library(usmap)
 library(tidyverse)
 
-# Load and prepare data
+prison_df <- read_csv("processed_data/merged_state_obs.csv")
+pop_df <- read_csv("processed_data/Pop_est_2022.csv")
+
+pop_df <- pop_df %>%
+  mutate(
+    State = str_remove(State, "^\\."),
+    Population_est_2022 = as.numeric(str_remove_all(Population_est_2022, ","))
+  )
+# Merge datasets
+map_data <- prison_df %>%
+  filter(jurisdiction != "Federal") %>%
+  left_join(pop_df, by = c("jurisdiction" = "State")) %>%
+  mutate(
+    state = state.name[match(jurisdiction, state.name)],
+    pct_incarcerated = (total_prison_pop_22 / Population_est_2022) * 100
+  )
+
+c_palette <- c("#fdaa48", "#FF8D1E", "#ee671d", "#b84818", "#6f300d", "#131110")
+
+plot_usmap(data = map_data, values = "pct_incarcerated", color = "white") +
+  scale_fill_gradientn(
+    colors = c_palette,
+    name = "% Incarcerated",
+    labels = scales::percent_format(scale = 1),
+    na.value = "black"
+  ) +
+  labs(
+    title = "Percentage of People in Prison (2022)",
+    subtitle = "Based on state prison population and estimated state population",
+    caption = "Data: Bureau of Justice Statistics, US Census"
+  ) +
+  theme_minimal(base_family = "sans") +
+  theme(
+    legend.position = "right",
+    plot.title = element_text(size = 16, face = "bold"),
+    plot.subtitle = element_text(size = 12, color = "gray40"),
+    plot.caption = element_text(size = 10, color = "gray40")
+  )
+```
+
+
+Viz #1.2: Percentage of Prisoners Working by State
+```{r, fig.width=10, fig.height=6, message=FALSE, warning=FALSE}
+library(usmap)
+library(tidyverse)
+
 df <- read_csv("processed_data/merged_state_obs.csv")
 
 map_data <- df %>%
@@ -55,18 +104,18 @@ map_data <- df %>%
     pct_working = ifelse(pct_working > 100, 100, pct_working)
   )
 
-# Plot choropleth with missing data
+c_palette <- c("#fdaa48", "#FF8D1E", "#ee671d", "#b84818", "#6f300d", "#131110")
+
 plot_usmap(data = map_data, values = "pct_working", color = "white") +
-  scale_fill_continuous(
-    low = "#CCE5FF",
-    high = "#003366",
+  scale_fill_gradientn(
+    colors = c_palette,
     name = "% Prisoners Working",
-    label = scales::percent_format(scale = 1),
-    na.value = "black"
+    labels = scales::percent_format(scale = 1),
+    na.value = "dark grey"
   ) +
   labs(
     title = "Percentage of Prisoners Working by State (2022)",
-    subtitle = "States with missing data shown in black",
+    subtitle = "States with missing data shown in grey"
   ) +
   theme_minimal(base_family = "sans") +
   theme(
@@ -75,4 +124,5 @@ plot_usmap(data = map_data, values = "pct_working", color = "white") +
     plot.subtitle = element_text(size = 12, color = "gray40"),
     plot.caption = element_text(size = 10, color = "gray40")
   )
+
 ```
