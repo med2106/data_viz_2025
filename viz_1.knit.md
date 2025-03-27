@@ -1,11 +1,12 @@
 ---
 author: "Sarah Chambers"
 title: "Prison Population Viz"
-output: html_document
+output: html
 ---
 
-Viz #1
-```{r, fig.width=10, fig.height=6, message=FALSE, warning=FALSE}
+::: {.cell}
+
+```{.r .cell-code}
 library(usmap)
 library(tidyverse)
 
@@ -37,9 +38,14 @@ plot_usmap(data = map_data, values = "total_prison_pop_22", color = "white") +
   )
 ```
 
+::: {.cell-output-display}
+![](viz_1_files/figure-html/unnamed-chunk-1-1.png){width=960}
+:::
+:::
 
-Viz #1.1
-```{r, fig.width=10, fig.height=6, message=FALSE, warning=FALSE}
+::: {.cell}
+
+```{.r .cell-code}
 library(usmap)
 library(tidyverse)
 
@@ -76,3 +82,9 @@ plot_usmap(data = map_data, values = "pct_working", color = "white") +
     plot.caption = element_text(size = 10, color = "gray40")
   )
 ```
+
+::: {.cell-output-display}
+![](viz_1_files/figure-html/unnamed-chunk-2-1.png){width=960}
+:::
+:::
+
