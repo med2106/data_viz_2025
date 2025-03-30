@@ -1,0 +1,152 @@
+---
+title: Types of Prison Labor
+subtitle: DSAN5200 Project
+author: Katherine Nunez, Section 03
+date: last-modified
+date-format: long
+format:
+  html:
+    code-fold: true
+editor: 
+  markdown: 
+    wrap: 72
+engine: knitr
+---
+
+## Types of Prison Labor
+
+For this project, we also wanted to examine how different types of prison labor varied across our selected dataset. We thought this would help inform our analysis as it helps to identify with more clarity what prison labor looks like, whether it trends toward labor that occurs inside of prisons or outside of prisons, and, additionally, who benefits from these labor practices.
+
+A recent news article brought this to a head. The New York Times reported that a Mississippi sheriff was using prison labor on the sheriff's family farm to clean chicken houses, fix cars, and install flooring. This all benefited the local sheriff personally. Typically, these inmates received cash or meals in return for this labor that occured in addition to their additional duties. (https://www.nytimes.com/2025/03/27/us/mississippi-inmate-labor-sheriff-farm.html) In this case, who benefits -- and why the additional labor occured -- is clear, but often the cases are not as cut and dry. 
+
+### Showing this in the data
+
+An initial analysis of the data shows that there are approximately ten possible job categories for inmates. They range from services clearly aimed at internal prison work -- including "laundry" -- and others that are almost certainly outside of the prisons -- such as "farming/forestry/ranching" and "good_production/industries". There are also some that cound be both, such as "grounds/road_maintenance" and "general services". 
+
+We also did some initial sorting based on whether or not a work assignment was required. Among those who worked, 12150 were required to work. 5 were not required to work but opted to anyway. It is important to note that this data is often incomplete and missing entries; for this portion, we opted not to do any data manipulation to solve these empty cells because the cells we did have were sufficient to conduct our analysis.
+
+```{r}
+#| echo: false
+library(tidyverse)
+
+df <- read_csv("processed_data/survey_data_with_sentiment.csv", show_col_types = FALSE)
+
+WA_req_yes_df <- df %>% 
+  filter(work_assignment_required == "yes")
+
+WA_req_no_df <- df %>% 
+  filter(work_assignment_required == "no")
+```
+
+```{r, #viz 4.1}
+library(plotly)
+
+c_palette <- c("#fdaa48", "#FF8D1E", "#ee671d", "#b84818", 
+               "#6f300d", "#131110", "#999999", "#cccccc")
+
+category_mapping <- c(
+  "no_WA" = "no Work Assignment",
+  "general_services" = "general services",
+  "grounds/road_maintenance" = "grounds and road maintenance",
+  "goods_production/industries" = "goods production and industries",
+  "maintenance/repair/construction" = "maintenance, repair, and construction",
+  "farming/forestry/ranching" = "farming, forestry, and ranching"
+)
+
+work_assignment_counts <- df %>%
+  group_by(work_assignment) %>%
+  summarise(count = n()) %>%
+  mutate(
+    work_assignment = recode(work_assignment, !!!category_mapping),
+    percentage = round(100 * count / sum(count), 1)
+  ) %>%
+  arrange(desc(count))  
+
+num_categories <- nrow(work_assignment_counts)
+work_assignment_counts <- work_assignment_counts %>%
+  mutate(
+    color = rep(c_palette, length.out = num_categories),  
+    pattern = rep(c("solid", "stripe", "dot", "x", "cross-hatch"), length.out = num_categories) 
+  )
+
+fig <- plot_ly(
+  work_assignment_counts,
+  labels = ~work_assignment,
+  values = ~count,
+  type = "pie",
+  marker = list(
+    colors = ~color,
+    pattern = list(shape = ~pattern)  
+  ),
+  textinfo = "none",  
+  hoverinfo = "text",
+  text = ~paste0(work_assignment, "<br>Count: ", count, "<br>Percent: ", percentage, "%")
+) %>%
+  layout(
+    title = "Work Assignment Distribution",
+    showlegend = TRUE
+  )
+
+fig
+```
+
+I'll make one final visualization for the inmates for whom a work assignment was required.
+
+```{r, # viz 4.2}
+c_palette <- c("#fdaa48", "#FF8D1E", "#ee671d", "#b84818", 
+               "#6f300d", "#131110", "#999999", "#cccccc")
+
+category_mapping <- c(
+  "no_WA" = "no Work Assignment",
+  "general_services" = "general services",
+  "grounds/road_maintenance" = "grounds and road maintenance",
+  "goods_production/industries" = "goods production and industries",
+  "maintenance/repair/construction" = "maintenance, repair, and construction",
+  "farming/forestry/ranching" = "farming, forestry, and ranching"
+)
+
+work_assignment_counts <- WA_req_yes_df %>%
+  group_by(work_assignment) %>%
+  summarise(count = n()) %>%
+  mutate(
+    work_assignment = recode(work_assignment, !!!category_mapping),
+    percentage = round(100 * count / sum(count), 1)
+  ) %>%
+  arrange(desc(count))  
+
+num_categories <- nrow(work_assignment_counts)
+work_assignment_counts <- work_assignment_counts %>%
+  mutate(
+    color = rep(c_palette, length.out = num_categories),  
+    pattern = rep(c("solid", "stripe", "dot", "x", "cross-hatch"), length.out = num_categories) 
+  )
+
+fig <- plot_ly(
+  work_assignment_counts,
+  labels = ~work_assignment,
+  values = ~count,
+  type = "pie",
+  marker = list(
+    colors = ~color,
+    pattern = list(shape = ~pattern)  
+  ),
+  textinfo = "none",  
+  hoverinfo = "text",
+  text = ~paste0(work_assignment, "<br>Count: ", count, "<br>Percent: ", percentage, "%")
+) %>%
+  layout(
+    title = "Work Assignment Distribution when Work is Required",
+    showlegend = TRUE
+  )
+
+fig
+```
+
+### Who Benefits?
+
+There are many people who could benefit from inmates conducting labor in the categories above. Private and public prisons benefit for having labor at well below the the federal minimum wage. In some way, citizens benefit too - using cheaper labor means that less tax dollars go into the prison system. It also means that for some tasks outside of prisons -- including some farming tasks and other bespoke work assignments like firefighting -- citizens benefit because of the cheaper labor performing those critical tasks. 
+
+
+
+
+
