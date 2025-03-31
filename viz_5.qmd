@@ -1,0 +1,85 @@
+---
+author: "Ian Alvarado"
+title: "Prisoner Work Assignment Sentiment"
+output: html_document
+---
+
+```{r, message=FALSE, warning=FALSE}
+# load libraries
+library(tidyverse)
+library(vegabrite)
+
+# define function to map full question text
+map_text <- function(quest) {
+    if(quest == "WA_break_up_boredom") {
+        return("How important are work assignments to break up boredom?")
+    } else if(quest == "WA_early_release") {
+        return("How important are work assignments to try to get out of prison early?")
+    } else if(quest == "WA_friendship") {
+        return("How important are work assignments to spend time with/make friends?")
+    } else if(quest == "WA_learn_job_skills") {
+        return("How important are work assignments to learn new job skills?")
+    } else {
+        return("How important are work assignments to make spending money?")
+    }
+}
+
+# define function to map question to topic
+map_number <- function(quest) {
+    if(quest == "WA_break_up_boredom") {
+        return("Boredom")
+    } else if(quest == "WA_early_release") {
+        return("Early release")
+    } else if(quest == "WA_friendship") {
+        return("Friendship")
+    } else if(quest == "WA_learn_job_skills") {
+        return("Learn skills")
+    } else {
+        return("Make money")
+    }
+}
+
+# define function to get percent string
+get_perc <- function(prop_num) {
+    prop_string <- as.character(round(prop_num, digits=3)*100)
+    return(paste0(prop_string,"%"))
+}
+
+# define function to replace underscores
+rep_und <- function(full_str) {
+    return(gsub("_", " ", full_str))
+}
+
+# load and format data
+survey_data <- read_csv("./processed_data/survey_data_with_sentiment.csv") |>
+    select(WA_break_up_boredom, WA_friendship, WA_early_release,
+        WA_learn_job_skills, WA_make_spending_money) |>
+    pivot_longer(everything(), names_to="question", values_to="response") |>
+    drop_na()
+
+# get proportions dataframe
+counts_df <- count(survey_data, question, response)
+formatted_df <- left_join(counts_df, count(counts_df, question, wt = n, name = "total")) |>
+    mutate(prop = n / total)
+
+# add columns for question number and text
+formatted_df <- formatted_df |>
+   mutate(quest_num = sapply(counts_df$question, FUN = map_number),
+          question = sapply(counts_df$question, FUN = map_text),
+          proportion = sapply(formatted_df$prop, FUN = get_perc),
+          response = sapply(formatted_df$response, FUN = rep_und)
+   )
+
+# create interactive chart
+vl_chart() |>
+    vl_add_data(formatted_df) |>
+    vl_mark_bar() |>
+    vl_encode_x(field = "quest_num", type = "nominal", title = "Topic") |>
+    vl_encode_y(field = "prop", type = "quantitative", title = "Proportion") |>
+    vl_axis_x(labelAngle = 0) |>
+    vl_encode_color("response", type = "nominal", title = "Importance") |>
+    vl_encode_tooltip_array(c("question", "response", "proportion")) |>
+    vl_scale_color(domain = list("not important at all", "sort of important", "very important"),
+                   range = list("#fdaa48", "#ff8d1e", "#b84818")) |>
+    vl_add_properties(title = "Prisoner Work Assignment Sentiments", width = 500, height = 400)
+```
