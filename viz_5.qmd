@@ -2,6 +2,9 @@
 author: "Ian Alvarado"
 title: "Prisoner Work Assignment Sentiment"
 output: html_document
+format:
+    html:
+        code-fold: true
 ---
 
 ```{r, message=FALSE, warning=FALSE}
@@ -83,3 +86,8 @@ vl_chart() |>
                    range = list("#fdaa48", "#ff8d1e", "#b84818")) |>
     vl_add_properties(title = "Prisoner Work Assignment Sentiments", width = 500, height = 400)
 ```
+
+#### Ideas:
+* Add drop down menu
+    * default shows all occupations
+    * can select other occupations
